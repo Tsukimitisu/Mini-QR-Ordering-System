@@ -1,80 +1,317 @@
-# Gourmet Express - Mini QR Ordering System
+# Gourmet Express Mini QR Ordering System
 
-Gourmet Express is a lightweight, mobile-first restaurant ordering system designed for local prototyping. Customers scan a tabletop QR code, view the live digital menu, add items to their shopping cart, place their order, and simulate a mock checkout payment. Admins can view orders in real time, monitor restaurant-wide statistics, update order/payment statuses via AJAX, and generate/print table tent QR cards.
+## Project Overview
 
----
+Gourmet Express is a simple restaurant QR ordering system for a small restaurant. Customers can scan a table QR code, view the menu, add products to a cart, place an order, and simulate payment. Admin users can view orders, update order status, update payment status, and generate QR codes for tables.
 
-## Technical Stack
-- **Frontend**: HTML5, Vanilla CSS3 (Custom Variables & Layouts), Modern JS (ES6+), Bootstrap 5, Bootstrap Icons.
-- **Backend API**: PHP (PDO-based database query layer, Transactions, server-side math calculations).
-- **Database**: MySQL.
-- **Support Utilities**: Node.js (offline static QR generator using the npm `qrcode` package).
-- **Local Dev Server**: XAMPP (Apache + MySQL).
+## Tech Stack
 
----
+- Frontend: HTML, CSS, JavaScript, Bootstrap 5
+- Backend: PHP with PDO
+- Database: MySQL
+- QR Utility: Node.js with the qrcode package
+- Local Server: XAMPP Apache and MySQL
 
-## Core Features
-1. **Interactive Mobile Ordering Menu**: Auto-grouped by categories, disabled out-of-stock items, floating sticky cart, and live cart adjustments.
-2. **Mock Payment Terminal**: Customer-facing simulated payment modal with gateway connecting animations, Success vs. Failure outcomes, and order confirmation slips.
-3. **Admin Dashboard Controls**: Executive indicators (Total Orders, Pending Orders, Paid Orders, Total Sales), status filtering, real-time AJAX dropdown updates, and itemized lists of purchased products.
-4. **Table Card QR Generator**: Interactive tabletop card preview builder allowing immediate card printing with customized target URL parameters.
-5. **Security and Math Calculations**: Strictly validates inputs and recalculates all pricing totals directly from database records on the backend.
+## Features
 
----
+- Display menu products
+- Group products by category
+- Add item to cart
+- Update item quantity
+- Remove item from cart
+- Compute subtotal and total amount
+- Mobile responsive customer page
+- Near real-time admin dashboard refresh
+- Generate QR code for table ordering page
+- Confirm table number before QR generation
+- GET products API
+- POST order API
+- GET orders API
+- Products table
+- Orders table
+- Order items table
+- Admin dashboard for viewing orders
+- Admin order status update
+- Admin payment status update
+- Mock payment success and failure flow
 
-## Installation & Setup Instructions (XAMPP Local Server)
+## Folder Structure
 
-### Step 1: Clone or Copy Files to XAMPP htdocs
-Copy the entire `Mini-Ordering-System` folder to your XAMPP installation directory under the `htdocs` directory:
-- **Default path on Windows**: `C:\xampp\htdocs\Mini-Ordering-System`
+```text
+Mini-Ordering-System
+|-- admin
+|   |-- dashboard.php
+|   |-- generate_qrs.js
+|   `-- qr_generator.php
+|-- api
+|   |-- db.php
+|   |-- orders.php
+|   |-- products.php
+|   |-- update_order_status.php
+|   `-- update_payment_status.php
+|-- assets
+|   |-- css
+|   |   `-- style.css
+|   `-- images
+|-- customer
+|   |-- cart.js
+|   |-- order.php
+|   `-- payment.js
+|-- database
+|   `-- mini_qr_ordering_db.sql
+|-- index.php
+|-- package.json
+`-- README.md
+```
 
-### Step 2: Start Apache and MySQL in XAMPP
-1. Open the **XAMPP Control Panel** from your computer.
-2. Click the **Start** button next to **Apache**.
-3. Click the **Start** button next to **MySQL**.
-4. Ensure both modules are highlighted green.
+## Installation Guide
 
-### Step 3: Setup the Database
-1. Open your browser and navigate to: `http://localhost/phpmyadmin/`
-2. Click on the **SQL** tab at the top.
-3. Open the file `database/mini_qr_ordering_db.sql` in a text editor, copy its contents, paste them into the phpMyAdmin SQL text box, and click **Go**.
-   - Alternatively: Click the **Import** tab in phpMyAdmin, choose the SQL file located at `c:\xampp\htdocs\Mini-Ordering-System\database\mini_qr_ordering_db.sql`, and click **Import** at the bottom.
-4. This will create the database `mini_qr_ordering_db` and insert the sample tables (`products`, `orders`, `order_items`, `tables`) along with gourmet seed items.
+### Step 1: Copy Project To XAMPP
 
-### Step 4: Run Node.js QR Exporter (Optional)
-The system includes a web-based QR generator, but if you want to batch generate static high-resolution QR codes to the files system:
-1. Open your terminal/command prompt.
-2. Navigate to the project root:
-   ```bash
-   cd c:\xampp\htdocs\Mini-Ordering-System
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Run the generator script:
-   ```bash
-   npm run generate-qrs
-   ```
-5. Check the generated PNGs in `assets/images/qrcodes/` (from Table 1 to 10).
+Place the project folder here:
 
----
+```text
+C:\xampp\htdocs\Mini-Ordering-System
+```
 
-## Testing the System Flow
+### Step 2: Start XAMPP
 
-1. **Access the Portal Page**:
-   Open your browser and navigate to: `http://localhost/Mini-Ordering-System/`
+Open XAMPP Control Panel and start:
 
-2. **Customer Flow**:
-   - Click the **Open Menu (Table 1)** button. This will simulate scanning a QR code for Table 1 (`http://localhost/Mini-Ordering-System/customer/order.php?table=1`).
-   - Add some items (e.g. Classic Cheeseburger, French Fries) to your cart.
-   - Adjust quantities or remove items, checking that totals auto-compute.
-   - Enter your name (e.g., "John Doe") and table number, then click **Place Order**.
-   - A mock payment screen will appear. Select **Simulate Payment Success** or **Simulate Payment Failed** to verify the response.
-   - On success, the cart clears, showing your receipt.
+- Apache
+- MySQL
 
-3. **Admin Flow**:
-   - Go back to the homepage portal (`http://localhost/Mini-Ordering-System/`) and click **Open Admin Dashboard** (or go to `http://localhost/Mini-Ordering-System/admin/dashboard.php`).
-   - Monitor the order you just created! Try changing the **Order Status** dropdown (e.g., to "Preparing" or "Completed") or **Payment Status** (e.g., to "Paid") and notice how status badges update color dynamically and statistics refresh immediately.
-   - Filter orders by clicking the filter pill buttons.
-   - Click on the **QR Generator** button in the header, input a table number, and print the generated layout card.
+### Step 3: Import Database
+
+Open phpMyAdmin:
+
+```text
+http://localhost/phpmyadmin/
+```
+
+Import this SQL file:
+
+```text
+C:\xampp\htdocs\Mini-Ordering-System\database\mini_qr_ordering_db.sql
+```
+
+This creates the database:
+
+```text
+mini_qr_ordering_db
+```
+
+### Step 4: Open The System
+
+Open the portal page:
+
+```text
+http://localhost/Mini-Ordering-System/
+```
+
+Customer ordering page example:
+
+```text
+http://localhost/Mini-Ordering-System/customer/order.php?table=1
+```
+
+Admin dashboard:
+
+```text
+http://localhost/Mini-Ordering-System/admin/dashboard.php
+```
+
+QR generator:
+
+```text
+http://localhost/Mini-Ordering-System/admin/qr_generator.php
+```
+
+## Optional QR Batch Generation
+
+Install Node dependencies:
+
+```text
+npm install
+```
+
+Generate QR PNG files:
+
+```text
+npm run generate-qrs
+```
+
+Generated QR images are saved in:
+
+```text
+assets/images/qrcodes
+```
+
+## Database
+
+The database SQL file is:
+
+```text
+database/mini_qr_ordering_db.sql
+```
+
+Main tables:
+
+- products
+- orders
+- order_items
+- tables
+
+## API Endpoints
+
+### GET Products
+
+```text
+api/products.php
+```
+
+Returns all products from the database.
+
+### GET Orders
+
+```text
+api/orders.php
+```
+
+Returns all orders with their ordered items.
+
+### POST Order
+
+```text
+api/orders.php
+```
+
+Creates a new customer order.
+
+Example request:
+
+```json
+{
+  "customer_name": "John Doe",
+  "table_number": 1,
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
+
+### POST Update Order Status
+
+```text
+api/update_order_status.php
+```
+
+Updates order status from the admin dashboard.
+
+Allowed values:
+
+- pending
+- preparing
+- completed
+- cancelled
+
+### POST Update Payment Status
+
+```text
+api/update_payment_status.php
+```
+
+Updates payment status from the admin dashboard or customer mock payment flow.
+
+Allowed payment status values:
+
+- unpaid
+- paid
+- failed
+
+Allowed payment result values:
+
+- success
+- failed
+- null
+
+## Testing Guide
+
+### Customer Test
+
+1. Open:
+
+```text
+http://localhost/Mini-Ordering-System/customer/order.php?table=1
+```
+
+2. Add products to cart.
+
+3. Change quantities.
+
+4. Remove an item.
+
+5. Confirm total amount updates.
+
+6. Enter customer name.
+
+7. Place the order.
+
+8. Simulate payment success.
+
+9. Repeat and simulate payment failure.
+
+### Admin Test
+
+1. Open:
+
+```text
+http://localhost/Mini-Ordering-System/admin/dashboard.php
+```
+
+2. Confirm the order appears.
+
+3. Change order status.
+
+4. Change payment status.
+
+5. Test status filters.
+
+6. Keep the admin dashboard open.
+
+7. Place a new order from the customer page.
+
+8. Confirm the admin dashboard refreshes automatically after the order changes.
+
+### QR Test
+
+1. Open:
+
+```text
+http://localhost/Mini-Ordering-System/admin/qr_generator.php
+```
+
+2. Enter a table number.
+
+3. Click Confirm Table & Generate QR.
+
+4. Accept the confirmation prompt.
+
+5. Confirm the QR code and table number update.
+
+6. Print the table card if needed.
+
+## Interview Notes
+
+Interview preparation notes are separated into:
+
+```text
+INTERVIEW_READINESS.md
+```
+
+## GitHub Note
+
+No GitHub push command has been run for this documentation update.

@@ -97,8 +97,9 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                         <label for="tableInput" class="form-label text-muted fs-7">Table Number</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted border"><i class="bi bi-tag-fill text-primary"></i></span>
-                            <input type="number" class="form-control bg-light border text-dark" id="tableInput" value="1" min="1" oninput="updateQrCode()">
+                            <input type="number" class="form-control bg-light border text-dark" id="tableInput" value="1" min="1">
                         </div>
+                        <small class="text-secondary fs-8 mt-1 d-block">Set the table number, then confirm to generate the final QR code.</small>
                     </div>
 
                     <div class="mb-4">
@@ -108,9 +109,16 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                     </div>
 
                     <div class="d-grid gap-2">
+                        <button class="btn btn-success py-3 rounded-pill fw-bold" onclick="confirmTableNumber()">
+                            <i class="bi bi-check-circle-fill me-2"></i> Confirm Table & Generate QR
+                        </button>
                         <button class="btn btn-warning py-3 rounded-pill fw-bold" onclick="printCard()">
                             <i class="bi bi-printer-fill me-2"></i> Print Table Card
                         </button>
+                    </div>
+
+                    <div class="alert alert-info mt-4 mb-0 rounded-3 fs-7" id="qr-confirmation-message">
+                        No table confirmed yet.
                     </div>
                 </div>
             </div>
@@ -138,8 +146,10 @@ $customerUrlPattern = $protocol . $host . $baseDir;
 
                     <!-- Table Number Shield -->
                     <div class="table-shield-banner text-white py-2.5 mb-5 shadow-sm fw-bold tracking-wider fs-5">
-                        TABLE <span id="preview-table-num">1</span>
+                        TABLE <span id="preview-table-num">--</span>
                     </div>
+
+                    <p class="text-muted fs-8 px-4 mb-3" id="confirmed-url-text">Confirm a table number to generate the QR target URL.</p>
 
                     <!-- Footer Details -->
                     <p class="text-muted fs-8 pb-3 mb-0">Powered by Gourmet Express Ordering System</p>
@@ -151,25 +161,63 @@ $customerUrlPattern = $protocol . $host . $baseDir;
     <!-- Script to manage dynamic QR rendering -->
     <script>
         let qrGeneratorInstance = null;
+        let confirmedTableNumber = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateQrCode();
+            showQrPlaceholder();
+
+            document.getElementById('tableInput').addEventListener('keydown', event => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    confirmTableNumber();
+                }
+            });
         });
 
-        function updateQrCode() {
+        function showQrPlaceholder() {
+            const canvasContainer = document.getElementById('qrcode-canvas');
+            canvasContainer.innerHTML = `
+                <div class="text-muted fs-8 text-center px-2">
+                    Confirm table first
+                </div>
+            `;
+        }
+
+        function getRequestedTableNumber() {
             const tableNumInput = document.getElementById('tableInput');
             let tableNum = parseInt(tableNumInput.value);
 
             if (isNaN(tableNum) || tableNum <= 0) {
-                tableNum = 1;
+                return null;
             }
 
-            // Sync visual table number text
+            return tableNum;
+        }
+
+        function confirmTableNumber() {
+            const tableNum = getRequestedTableNumber();
+
+            if (!tableNum) {
+                alert("Please enter a valid table number before generating the QR code.");
+                return;
+            }
+
+            const confirmed = confirm("Generate QR code for Table " + tableNum + "?");
+            if (!confirmed) {
+                return;
+            }
+
+            confirmedTableNumber = tableNum;
+            updateQrCode(confirmedTableNumber);
+        }
+
+        function updateQrCode(tableNum) {
             document.getElementById('preview-table-num').innerText = tableNum;
 
             // Generate full URL payload
             const baseUrl = document.getElementById('baseUrlInput').value;
             const fullTargetUrl = baseUrl + "?table=" + tableNum;
+            document.getElementById('confirmed-url-text').innerText = fullTargetUrl;
 
             // Target canvas
             const canvasContainer = document.getElementById('qrcode-canvas');
@@ -184,10 +232,18 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+
+            document.getElementById('qr-confirmation-message').className = "alert alert-success mt-4 mb-0 rounded-3 fs-7";
+            document.getElementById('qr-confirmation-message').innerText = "Confirmed: QR code generated for Table " + tableNum + ".";
         }
 
         // Print Card
         function printCard() {
+            if (!confirmedTableNumber) {
+                alert("Please confirm a table number before printing the QR card.");
+                return;
+            }
+
             window.print();
         }
     </script>

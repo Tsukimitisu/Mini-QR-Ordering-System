@@ -155,6 +155,9 @@ try {
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
                 <h4 class="fw-bold mb-0">
                     <i class="bi bi-list-stars text-primary me-2"></i>Order Management
+                    <span class="badge bg-success text-white rounded-pill ms-2 fs-8">
+                        <i class="bi bi-broadcast-pin me-1"></i>Live
+                    </span>
                 </h4>
                 <!-- Filters -->
                 <div class="d-flex gap-2 overflow-auto scrollbar-none pb-1">
@@ -268,17 +271,75 @@ try {
     <!-- Admin Operations JS -->
     <script>
         let statusToast;
+        let dashboardUpdateInProgress = false;
+        let lastOrdersSignature = '';
+        const dashboardStatusFilter = <?php echo json_encode($statusFilter); ?>;
+        const initialOrdersSnapshot = <?php echo json_encode($orders, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
         document.addEventListener('DOMContentLoaded', () => {
             const toastEl = document.getElementById('statusToast');
             statusToast = new bootstrap.Toast(toastEl, { delay: 3000 });
             
             document.querySelectorAll('.select-status').forEach(el => applyStatusColor(el));
             document.querySelectorAll('.select-payment').forEach(el => applyPaymentColor(el));
+
+            lastOrdersSignature = buildOrdersSignature(initialOrdersSnapshot);
+            setInterval(checkForDashboardUpdates, 5000);
         });
+
+        function buildOrdersSignature(orders) {
+            return JSON.stringify((orders || []).map(order => ({
+                id: String(order.id),
+                total_amount: String(order.total_amount),
+                order_status: String(order.order_status),
+                payment_status: String(order.payment_status),
+                payment_result: order.payment_result === null ? null : String(order.payment_result),
+                updated_at: String(order.updated_at),
+                items: (order.items || []).map(item => ({
+                    id: String(item.id),
+                    product_id: String(item.product_id),
+                    quantity: String(item.quantity),
+                    subtotal: String(item.subtotal)
+                }))
+            })));
+        }
+
+        function checkForDashboardUpdates() {
+            if (dashboardUpdateInProgress || document.hidden) {
+                return;
+            }
+
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.classList.contains('select-status') || activeEl.classList.contains('select-payment'))) {
+                return;
+            }
+
+            const apiUrl = '../api/orders.php?status=' + encodeURIComponent(dashboardStatusFilter);
+
+            fetch(apiUrl, { cache: 'no-store' })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        return;
+                    }
+
+                    const nextSignature = buildOrdersSignature(data.data);
+                    if (lastOrdersSignature && nextSignature !== lastOrdersSignature) {
+                        showToast("Dashboard updated. Refreshing latest orders...", "bi-arrow-repeat text-success");
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800);
+                    }
+                })
+                .catch(err => {
+                    console.error("Dashboard polling error:", err);
+                });
+        }
 
         function updateOrderStatus(orderId, selectEl) {
             const status = selectEl.value;
             selectEl.disabled = true;
+            dashboardUpdateInProgress = true;
 
             fetch('../api/update_order_status.php', {
                 method: 'POST',
@@ -300,11 +361,13 @@ try {
                         window.location.reload();
                     }, 1000);
                 } else {
+                    dashboardUpdateInProgress = false;
                     showToast("Failed: " + data.message, "bi-x-circle-fill text-danger");
                 }
             })
             .catch(err => {
                 selectEl.disabled = false;
+                dashboardUpdateInProgress = false;
                 console.error(err);
                 showToast("Network error occurred.", "bi-exclamation-triangle-fill text-danger");
             });
@@ -313,6 +376,7 @@ try {
         function updatePaymentStatus(orderId, selectEl) {
             const status = selectEl.value;
             selectEl.disabled = true;
+            dashboardUpdateInProgress = true;
 
             let result = null;
             if (status === 'paid') result = 'success';
@@ -339,11 +403,13 @@ try {
                         window.location.reload();
                     }, 1000);
                 } else {
+                    dashboardUpdateInProgress = false;
                     showToast("Failed: " + data.message, "bi-x-circle-fill text-danger");
                 }
             })
             .catch(err => {
                 selectEl.disabled = false;
+                dashboardUpdateInProgress = false;
                 console.error(err);
                 showToast("Network error occurred.", "bi-exclamation-triangle-fill text-danger");
             });
