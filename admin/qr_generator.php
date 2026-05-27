@@ -12,6 +12,8 @@ $customerUrlPattern = $protocol . $host . $baseDir;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table QR Code Generator - Gourmet Express</title>
+    <link rel="icon" type="image/png" href="../Logo/Logo.png">
+    <link rel="apple-touch-icon" href="../Logo/Logo.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->

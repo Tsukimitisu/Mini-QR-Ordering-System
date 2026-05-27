@@ -44,8 +44,11 @@ Developed by James Andrei N Revilla
 - Order items table
 - Admin dashboard for viewing orders
 - Admin add menu item page
+- Admin edit product stock and availability
 - Admin order status update
 - Admin payment status update
+- Product stock validation during checkout
+- Peso currency display
 - Mock payment success and failure flow
 
 ## Folder Structure
@@ -160,6 +163,8 @@ Main tables:
 - orders
 - order_items
 - tables
+
+Product records include price, image, category, availability, and stock quantity.
 
 ## API Endpoints
 
@@ -295,15 +300,19 @@ https://mini-qr-ordering.infinityfreeapp.com/admin/dashboard.php
 
 6. Open the menu management page.
 
-7. Add a new product with name, description, price, category, availability, and image.
+7. Add a new product with name, description, price, stock, category, availability, and image.
 
 8. Confirm the new product appears on the customer menu.
 
-9. Keep the admin dashboard open.
+9. Edit product stock and availability from the menu management table.
 
-10. Place a new order from the customer page.
+10. Confirm stock and availability affect the customer menu.
 
-11. Confirm the admin dashboard refreshes automatically after the order changes.
+11. Keep the admin dashboard open.
+
+12. Place a new order from the customer page.
+
+13. Confirm the admin dashboard refreshes automatically after the order changes.
 
 ### QR Test
 

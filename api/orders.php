@@ -82,20 +82,28 @@ if ($method === 'GET') {
         $totalAmount = 0.00;
         $orderItemsToInsert = [];
         
-        // 2. Process items and verify prices securely
+        $mergedItems = [];
         foreach ($items as $item) {
             $productId = isset($item['product_id']) ? intval($item['product_id']) : 0;
             $quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
-            
+
             if ($productId <= 0) {
                 throw new Exception("Invalid product selection in cart.");
             }
             if ($quantity <= 0) {
                 throw new Exception("Quantity must be greater than 0.");
             }
-            
+
+            if (!isset($mergedItems[$productId])) {
+                $mergedItems[$productId] = 0;
+            }
+            $mergedItems[$productId] += $quantity;
+        }
+
+        // 2. Process items and verify prices securely
+        foreach ($mergedItems as $productId => $quantity) {
             // Query current item from the DB
-            $prodStmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+            $prodStmt = $pdo->prepare("SELECT * FROM products WHERE id = ? FOR UPDATE");
             $prodStmt->execute([$productId]);
             $product = $prodStmt->fetch();
             
@@ -105,6 +113,11 @@ if ($method === 'GET') {
             
             if (intval($product['availability_status']) !== 1) {
                 throw new Exception("The item '" . $product['product_name'] . "' is currently out of stock.");
+            }
+
+            $stockQuantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 0;
+            if ($stockQuantity < $quantity) {
+                throw new Exception("Only " . $stockQuantity . " stock left for '" . $product['product_name'] . "'.");
             }
             
             $price = floatval($product['price']);
@@ -116,7 +129,8 @@ if ($method === 'GET') {
                 'product_name' => $product['product_name'],
                 'quantity' => $quantity,
                 'price' => $price,
-                'subtotal' => $subtotal
+                'subtotal' => $subtotal,
+                'remaining_stock' => $stockQuantity - $quantity
             ];
         }
         
@@ -141,6 +155,18 @@ if ($method === 'GET') {
                 $oItem['quantity'],
                 $oItem['price'],
                 $oItem['subtotal']
+            ]);
+
+            $stockUpdateStmt = $pdo->prepare("
+                UPDATE products 
+                SET stock_quantity = ?,
+                    availability_status = CASE WHEN ? <= 0 THEN 0 ELSE availability_status END
+                WHERE id = ?
+            ");
+            $stockUpdateStmt->execute([
+                $oItem['remaining_stock'],
+                $oItem['remaining_stock'],
+                $oItem['product_id'],
             ]);
         }
         

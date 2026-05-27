@@ -26,6 +26,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gourmet Express - Menu & Order</title>
+    <link rel="icon" type="image/png" href="../Logo/Logo.png">
+    <link rel="apple-touch-icon" href="../Logo/Logo.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
@@ -88,7 +90,8 @@ try {
                             </h3>
                             <div class="row g-4">
                                 <?php foreach ($items as $item): 
-                                    $isAvailable = intval($item['availability_status']) === 1;
+                                    $stockQuantity = isset($item['stock_quantity']) ? intval($item['stock_quantity']) : 0;
+                                    $isAvailable = intval($item['availability_status']) === 1 && $stockQuantity > 0;
                                 ?>
                                     <div class="col-md-6">
                                         <div class="card product-card h-100 rounded-4 overflow-hidden border bg-white <?php echo !$isAvailable ? 'out-of-stock-card' : ''; ?>">
@@ -100,7 +103,7 @@ try {
                                                     </div>
                                                 <?php endif; ?>
                                                 <span class="price-tag shadow-sm fw-semibold px-3 py-1 rounded-pill">
-                                                    $<?php echo number_format($item['price'], 2); ?>
+                                                    ₱<?php echo number_format($item['price'], 2); ?>
                                                 </span>
                                             </div>
                                             <div class="card-body d-flex flex-column p-4">
@@ -109,11 +112,11 @@ try {
                                                 <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light-subtle">
                                                     <span class="text-muted fs-7">
                                                         <i class="bi <?php echo $isAvailable ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'; ?> me-1"></i>
-                                                        <?php echo $isAvailable ? 'Available' : 'Unavailable'; ?>
+                                                        <?php echo $isAvailable ? 'Stock: ' . $stockQuantity : 'Unavailable'; ?>
                                                     </span>
                                                     <?php if ($isAvailable): ?>
                                                         <button class="btn btn-warning btn-sm rounded-pill px-3 py-2 fw-semibold add-to-cart-btn" 
-                                                                onclick="addToCart(<?php echo $item['id']; ?>, '<?php echo htmlspecialchars(addslashes($item['product_name'])); ?>', <?php echo $item['price']; ?>, '../assets/images/<?php echo htmlspecialchars($item['image']); ?>')">
+                                                                onclick="addToCart(<?php echo $item['id']; ?>, '<?php echo htmlspecialchars(addslashes($item['product_name'])); ?>', <?php echo $item['price']; ?>, '../assets/images/<?php echo htmlspecialchars($item['image']); ?>', <?php echo $stockQuantity; ?>)">
                                                             <i class="bi bi-plus-lg me-1"></i> Add
                                                         </button>
                                                     <?php else: ?>
@@ -153,16 +156,16 @@ try {
                     <div class="totals-section border-top pt-3 mb-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Subtotal</span>
-                            <span class="fw-semibold text-dark" id="cart-subtotal">$0.00</span>
+                            <span class="fw-semibold text-dark" id="cart-subtotal">₱0.00</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Service Tax (0%)</span>
-                            <span class="text-dark">$0.00</span>
+                            <span class="text-dark">₱0.00</span>
                         </div>
                         <hr class="my-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="fw-bold text-dark">Total Amount</span>
-                            <span class="fw-bold text-primary fs-4" id="cart-total">$0.00</span>
+                            <span class="fw-bold text-primary fs-4" id="cart-total">₱0.00</span>
                         </div>
                     </div>
 
@@ -195,7 +198,7 @@ try {
     <div class="mobile-cart-sticky-bar d-lg-none fixed-bottom p-3 border-top shadow-sm">
         <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold d-flex justify-content-between align-items-center" onclick="scrollToCart()">
             <span><i class="bi bi-cart-fill me-2"></i> View Cart & Checkout</span>
-            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total">$0.00</span>
+            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total">₱0.00</span>
         </button>
     </div>
 
@@ -240,7 +243,7 @@ try {
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted fs-7">Amount Paid:</span>
-                                <span class="fw-bold text-primary fs-7" id="success-order-amount">$0.00</span>
+                                <span class="fw-bold text-primary fs-7" id="success-order-amount">₱0.00</span>
                             </div>
                         </div>
                         <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold" onclick="resetSystem()">

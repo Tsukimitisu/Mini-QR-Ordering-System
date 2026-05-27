@@ -60,6 +60,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Gourmet Express</title>
+    <link rel="icon" type="image/png" href="../Logo/Logo.png">
+    <link rel="apple-touch-icon" href="../Logo/Logo.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
@@ -143,7 +145,7 @@ try {
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <span class="text-muted fs-7 fw-medium text-uppercase tracking-wider">Total Sales</span>
-                            <h2 class="fw-bold mt-1 mb-0 text-dark">$<?php echo number_format($totalSales, 2); ?></h2>
+                            <h2 class="fw-bold mt-1 mb-0 text-dark">₱<?php echo number_format($totalSales, 2); ?></h2>
                         </div>
                         <div class="stat-icon bg-light rounded-3 p-3 text-dark">
                             <i class="bi bi-cash-stack fs-4"></i>
@@ -213,14 +215,14 @@ try {
                                                     <li class="text-muted mb-1">
                                                         <span class="text-dark fw-medium"><?php echo $item['quantity']; ?>x</span> 
                                                         <?php echo htmlspecialchars($item['product_name']); ?> 
-                                                        <span class="text-secondary">($<?php echo number_format($item['price'], 2); ?>)</span>
+                                                        <span class="text-secondary">(₱<?php echo number_format($item['price'], 2); ?>)</span>
                                                     </li>
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>
                                     </td>
                                     <td class="fw-bold text-primary fs-6">
-                                        $<?php echo number_format($order['total_amount'], 2); ?>
+                                        ₱<?php echo number_format($order['total_amount'], 2); ?>
                                     </td>
                                     <td>
                                         <!-- Order Status Selector -->

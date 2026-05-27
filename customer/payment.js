@@ -44,7 +44,7 @@ function simulatePayment(status) {
                 // Populate Success Information
                 document.getElementById('success-table-number').innerText = currentOrder.table;
                 document.getElementById('success-order-ref').innerText = '#' + currentOrder.id;
-                document.getElementById('success-order-amount').innerText = '$' + parseFloat(currentOrder.total).toFixed(2);
+                document.getElementById('success-order-amount').innerText = '₱' + parseFloat(currentOrder.total).toFixed(2);
                 
                 // Show success screen
                 document.getElementById('payment-success').classList.remove('d-none');

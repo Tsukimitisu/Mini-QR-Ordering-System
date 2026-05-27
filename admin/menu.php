@@ -3,7 +3,12 @@
 require_once '../api/db.php';
 
 $errors = [];
-$successMessage = isset($_GET['added']) ? 'Menu item added successfully.' : '';
+$successMessage = '';
+if (isset($_GET['added'])) {
+    $successMessage = 'Menu item added successfully.';
+} elseif (isset($_GET['updated'])) {
+    $successMessage = 'Menu stock and availability updated successfully.';
+}
 $uploadDir = realpath(__DIR__ . '/../assets/images');
 
 if ($uploadDir === false) {
@@ -11,11 +16,47 @@ if ($uploadDir === false) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $formAction = isset($_POST['form_action']) ? trim($_POST['form_action']) : 'add_product';
+
+    if ($formAction === 'update_inventory') {
+        $productId = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+        $stockQuantity = isset($_POST['stock_quantity']) ? intval($_POST['stock_quantity']) : -1;
+        $availabilityStatus = isset($_POST['availability_status']) ? intval($_POST['availability_status']) : 1;
+
+        if ($productId <= 0) {
+            $errors[] = 'Invalid product selected.';
+        }
+
+        if ($stockQuantity < 0) {
+            $errors[] = 'Stock cannot be negative.';
+        }
+
+        if (!in_array($availabilityStatus, [0, 1], true)) {
+            $errors[] = 'Invalid availability status.';
+        }
+
+        if (empty($errors)) {
+            if ($stockQuantity === 0) {
+                $availabilityStatus = 0;
+            }
+
+            try {
+                $stmt = $pdo->prepare("UPDATE products SET stock_quantity = ?, availability_status = ? WHERE id = ?");
+                $stmt->execute([$stockQuantity, $availabilityStatus, $productId]);
+
+                header('Location: menu.php?updated=1');
+                exit;
+            } catch (Exception $e) {
+                $errors[] = 'Failed to update menu item: ' . $e->getMessage();
+            }
+        }
+    } elseif ($formAction === 'add_product') {
     $productName = isset($_POST['product_name']) ? trim($_POST['product_name']) : '';
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $price = isset($_POST['price']) ? trim($_POST['price']) : '';
     $category = isset($_POST['category']) ? trim($_POST['category']) : '';
     $availabilityStatus = isset($_POST['availability_status']) ? intval($_POST['availability_status']) : 1;
+    $stockQuantity = isset($_POST['stock_quantity']) ? intval($_POST['stock_quantity']) : 0;
     $imageName = '';
 
     if ($productName === '') {
@@ -32,6 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!in_array($availabilityStatus, [0, 1], true)) {
         $errors[] = 'Invalid availability status.';
+    }
+
+    if ($stockQuantity < 0) {
+        $errors[] = 'Stock cannot be negative.';
+    }
+
+    if ($stockQuantity === 0) {
+        $availabilityStatus = 0;
     }
 
     if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
@@ -70,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $stmt = $pdo->prepare("
-                INSERT INTO products (product_name, description, price, image, category, availability_status)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO products (product_name, description, price, image, category, availability_status, stock_quantity)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $productName,
@@ -80,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $imageName,
                 $category,
                 $availabilityStatus,
+                $stockQuantity,
             ]);
 
             header('Location: menu.php?added=1');
@@ -93,6 +143,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $errors[] = 'Failed to save menu item: ' . $e->getMessage();
         }
+    }
+    } else {
+        $errors[] = 'Invalid form action.';
     }
 }
 
@@ -114,6 +167,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Management - Gourmet Express</title>
+    <link rel="icon" type="image/png" href="../Logo/Logo.png">
+    <link rel="apple-touch-icon" href="../Logo/Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -166,6 +221,7 @@ try {
                     <?php endif; ?>
 
                     <form method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="form_action" value="add_product">
                         <div class="mb-3">
                             <label for="product_name" class="form-label text-muted fs-7">Product Name</label>
                             <input type="text" class="form-control bg-light border text-dark" id="product_name" name="product_name" required>
@@ -179,6 +235,11 @@ try {
                         <div class="mb-3">
                             <label for="price" class="form-label text-muted fs-7">Price</label>
                             <input type="number" class="form-control bg-light border text-dark" id="price" name="price" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stock_quantity" class="form-label text-muted fs-7">Stock Quantity</label>
+                            <input type="number" class="form-control bg-light border text-dark" id="stock_quantity" name="stock_quantity" min="0" value="10" required>
                         </div>
 
                         <div class="mb-3">
@@ -237,11 +298,15 @@ try {
                                         <th>Product</th>
                                         <th>Category</th>
                                         <th>Price</th>
-                                        <th>Status</th>
+                                        <th>Stock</th>
+                                        <th>Availability</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($products as $product): ?>
+                                        <?php $stockQuantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 0; ?>
+                                        <?php $inventoryFormId = 'inventory-form-' . intval($product['id']); ?>
                                         <tr>
                                             <td>
                                                 <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" class="rounded-3 border" style="width: 58px; height: 58px; object-fit: cover;">
@@ -258,14 +323,25 @@ try {
                                                 </span>
                                             </td>
                                             <td class="fw-bold text-primary">
-                                                $<?php echo number_format($product['price'], 2); ?>
+                                                ₱<?php echo number_format($product['price'], 2); ?>
                                             </td>
                                             <td>
-                                                <?php if (intval($product['availability_status']) === 1): ?>
-                                                    <span class="badge bg-success text-white rounded-pill px-3 py-1.5">Available</span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-secondary text-white rounded-pill px-3 py-1.5">Out of stock</span>
-                                                <?php endif; ?>
+                                                <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7" name="stock_quantity" min="0" value="<?php echo $stockQuantity; ?>" style="width: 95px;">
+                                            </td>
+                                            <td>
+                                                <select form="<?php echo $inventoryFormId; ?>" class="form-select bg-light border text-dark fs-7" name="availability_status" style="width: 135px;">
+                                                    <option value="1" <?php echo intval($product['availability_status']) === 1 ? 'selected' : ''; ?>>Available</option>
+                                                    <option value="0" <?php echo intval($product['availability_status']) === 0 ? 'selected' : ''; ?>>Out of stock</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <form id="<?php echo $inventoryFormId; ?>" method="POST">
+                                                    <input type="hidden" name="form_action" value="update_inventory">
+                                                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                                    <button type="submit" class="btn btn-sm btn-warning rounded-pill px-3 fw-semibold">
+                                                        Save
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `image` VARCHAR(255) NOT NULL,
   `category` VARCHAR(100) NOT NULL,
   `availability_status` TINYINT(1) DEFAULT 1 COMMENT '1 = Available, 0 = Out of Stock',
+  `stock_quantity` INT NOT NULL DEFAULT 20 COMMENT 'Available stock count',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -50,12 +51,12 @@ CREATE TABLE IF NOT EXISTS `tables` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Seed Sample Products
-INSERT INTO `products` (`id`, `product_name`, `description`, `price`, `image`, `category`, `availability_status`) VALUES
-(1, 'Classic Cheeseburger', 'A juicy flame-grilled beef patty, melted cheddar cheese, crisp lettuce, fresh tomatoes, pickles, and our signature burger sauce on a toasted brioche bun.', 5.99, 'cheeseburger.png', 'Burgers', 1),
-(2, 'Pepperoni Pizza', 'Freshly baked hand-tossed crust topped with rich marinara sauce, premium mozzarella cheese, and generous slices of spicy pepperoni.', 8.99, 'pizza.png', 'Pizzas', 1),
-(3, 'Crispy French Fries', 'Golden-brown, double-fried potato fries lightly seasoned with sea salt. Served hot with a side of ketchup.', 2.99, 'fries.png', 'Sides', 1),
-(4, 'Sweet Iced Tea', 'Brewed black tea infused with natural lemon juice and sweetened to perfection. Served cold over ice.', 1.99, 'iced_tea.png', 'Drinks', 1),
-(5, 'Chocolate Milkshake', 'Creamy and rich vanilla ice cream blended with premium chocolate syrup, topped with fresh whipped cream and chocolate shavings.', 3.49, 'milkshake.png', 'Drinks', 0);
+INSERT INTO `products` (`id`, `product_name`, `description`, `price`, `image`, `category`, `availability_status`, `stock_quantity`) VALUES
+(1, 'Classic Cheeseburger', 'A juicy flame-grilled beef patty, melted cheddar cheese, crisp lettuce, fresh tomatoes, pickles, and our signature burger sauce on a toasted brioche bun.', 5.99, 'cheeseburger.png', 'Burgers', 1, 30),
+(2, 'Pepperoni Pizza', 'Freshly baked hand-tossed crust topped with rich marinara sauce, premium mozzarella cheese, and generous slices of spicy pepperoni.', 8.99, 'pizza.png', 'Pizzas', 1, 20),
+(3, 'Crispy French Fries', 'Golden-brown, double-fried potato fries lightly seasoned with sea salt. Served hot with a side of ketchup.', 2.99, 'fries.png', 'Sides', 1, 50),
+(4, 'Sweet Iced Tea', 'Brewed black tea infused with natural lemon juice and sweetened to perfection. Served cold over ice.', 1.99, 'iced_tea.png', 'Drinks', 1, 40),
+(5, 'Chocolate Milkshake', 'Creamy and rich vanilla ice cream blended with premium chocolate syrup, topped with fresh whipped cream and chocolate shavings.', 3.49, 'milkshake.png', 'Drinks', 0, 0);
 
 -- Seed Tables
 INSERT INTO `tables` (`table_number`, `status`) VALUES

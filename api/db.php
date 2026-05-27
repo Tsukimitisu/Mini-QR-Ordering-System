@@ -16,6 +16,12 @@ $options = [
 
 try {
      $pdo = new PDO($dsn, $user, $pass, $options);
+
+     $columnStmt = $pdo->query("SHOW COLUMNS FROM products LIKE 'stock_quantity'");
+     if (!$columnStmt->fetch()) {
+         $pdo->exec("ALTER TABLE products ADD COLUMN stock_quantity INT NOT NULL DEFAULT 20 COMMENT 'Available stock count' AFTER availability_status");
+         $pdo->exec("UPDATE products SET stock_quantity = 0 WHERE availability_status = 0");
+     }
 } catch (\PDOException $e) {
      // Return JSON error response if connection fails
      header('Content-Type: application/json');

@@ -41,17 +41,24 @@ function filterCategory(category) {
 }
 
 // Add Item to Cart
-function addToCart(productId, name, price, image) {
+function addToCart(productId, name, price, image, stock) {
+    const stockLimit = Number.isFinite(parseInt(stock)) ? parseInt(stock) : null;
     const existingItem = cart.find(item => item.product_id === productId);
     
     if (existingItem) {
+        if (stockLimit !== null && existingItem.quantity >= stockLimit) {
+            alert(`Only ${stockLimit} stock available for ${name}.`);
+            return;
+        }
         existingItem.quantity += 1;
+        existingItem.stock_quantity = stockLimit;
     } else {
         cart.push({
             product_id: productId,
             product_name: name,
             price: parseFloat(price),
             image: image,
+            stock_quantity: stockLimit,
             quantity: 1
         });
     }
@@ -70,6 +77,11 @@ function addToCart(productId, name, price, image) {
 function updateQuantity(productId, change) {
     const item = cart.find(item => item.product_id === productId);
     if (item) {
+        if (change > 0 && item.stock_quantity !== null && item.stock_quantity !== undefined && item.quantity >= item.stock_quantity) {
+            alert(`Only ${item.stock_quantity} stock available for ${item.product_name}.`);
+            return;
+        }
+
         item.quantity += change;
         if (item.quantity <= 0) {
             removeFromCart(productId);
@@ -121,7 +133,7 @@ function renderCart() {
                     <img src="${item.image}" alt="${item.product_name}" class="rounded-3 me-3" style="width: 50px; height: 50px; object-fit: cover;">
                     <div class="flex-grow-1">
                         <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${item.product_name}</h6>
-                        <span class="text-primary fw-semibold fs-7">$${item.price.toFixed(2)}</span>
+                        <span class="text-primary fw-semibold fs-7">₱${item.price.toFixed(2)}</span>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, -1)">
@@ -143,10 +155,10 @@ function renderCart() {
     
     // Update numeric values
     countBadge.innerText = totalItems;
-    subtotalText.innerText = `$${totalPrice.toFixed(2)}`;
-    totalText.innerText = `$${totalPrice.toFixed(2)}`;
+    subtotalText.innerText = `₱${totalPrice.toFixed(2)}`;
+    totalText.innerText = `₱${totalPrice.toFixed(2)}`;
     if (mobileTotalText) {
-        mobileTotalText.innerText = `$${totalPrice.toFixed(2)}`;
+        mobileTotalText.innerText = `₱${totalPrice.toFixed(2)}`;
     }
 }
 
