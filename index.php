@@ -21,31 +21,43 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1rem;
+            padding: 3rem 1rem;
         }
         .portal-card {
             border: 1px solid var(--border-color) !important;
-            max-width: 850px;
+            max-width: 920px;
             width: 100%;
         }
-        .flow-step {
-            position: relative;
-            padding-left: 45px;
+        .portal-eyebrow {
+            color: var(--primary-color);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
-        .flow-number {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 30px;
-            height: 30px;
-            background: var(--primary-color);
-            color: #ffffff;
-            border-radius: 50%;
+        .portal-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1.05;
+        }
+        .portal-copy {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+        .portal-action-card {
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .portal-action-card:hover {
+            border-color: #cbd5e0;
+            transform: translateY(-2px);
+        }
+        .portal-icon {
+            width: 46px;
+            height: 46px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
         }
         .btn-portal-primary {
             background-color: var(--primary-color);
@@ -71,6 +83,10 @@
             background-color: #e2e8f0;
             color: var(--text-main);
         }
+        .portal-credit {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -80,45 +96,57 @@
             
             <!-- Branding Header -->
             <div class="text-center mb-5">
+                <div class="portal-eyebrow mb-3">Restaurant QR Ordering</div>
                 <div class="brand-logo mb-3 justify-content-center">
                     <i class="bi bi-egg-fried text-primary me-2 fs-1"></i>
-                    <h1 class="fw-bold text-dark tracking-wide mb-0 display-6">GOURMET<span class="text-primary">EXPRESS</span></h1>
+                    <h1 class="fw-bold text-dark tracking-wide mb-0 portal-title">GOURMET<span class="text-primary">EXPRESS</span></h1>
                 </div>
-                <p class="text-muted">Complete Mini QR Ordering System Prototype</p>
-                <div class="badge border text-secondary px-3 py-1.5 rounded-pill fs-8">
-                    <i class="bi bi-code-slash me-1"></i> PHP + MySQL + Node.js
+                <p class="text-muted portal-copy mb-4">
+                    A PHP and MySQL ordering system for table-based restaurant service. Customers can order from a QR link while staff manage orders, payments, menu items, and QR cards from the admin area.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span class="badge border text-secondary px-3 py-2 rounded-pill fs-8">PHP</span>
+                    <span class="badge border text-secondary px-3 py-2 rounded-pill fs-8">MySQL</span>
+                    <span class="badge border text-secondary px-3 py-2 rounded-pill fs-8">Bootstrap</span>
+                    <span class="badge border text-secondary px-3 py-2 rounded-pill fs-8">PHP QR</span>
                 </div>
             </div>
 
             <!-- Portal Routes -->
-            <div class="row g-4 mb-5">
+            <div class="row g-4">
                 <div class="col-md-6">
-                    <div class="h-100 p-4 rounded-4 bg-light border d-flex flex-column">
+                    <div class="portal-action-card h-100 p-4 rounded-4 d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary text-white rounded-circle p-2.5 me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <div class="portal-icon bg-primary text-white rounded-circle me-3">
                                 <i class="bi bi-phone fs-4"></i>
                             </div>
-                            <h4 class="fw-bold mb-0 text-dark">Customer App</h4>
+                            <div>
+                                <h4 class="fw-bold mb-0 text-dark">Customer Ordering</h4>
+                                <span class="text-muted fs-8">Table 1 sample link</span>
+                            </div>
                         </div>
                         <p class="text-muted fs-7 flex-grow-1">
-                            Simulate scanning a tabletop QR code. Browse the menu, manage items in the cart, place orders, and simulate payment decisions.
+                            Browse available menu items, add products to cart, place an order, and complete the mock payment flow.
                         </p>
                         <a href="customer/order.php?table=1" class="btn btn-portal-primary py-2.5 rounded-pill mt-3">
-                            <i class="bi bi-qr-code-scan me-2"></i> Open Menu (Table 1)
+                            <i class="bi bi-qr-code-scan me-2"></i> Open Customer Menu
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="h-100 p-4 rounded-4 bg-light border d-flex flex-column">
+                    <div class="portal-action-card h-100 p-4 rounded-4 d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="bg-white text-primary rounded-circle p-2.5 me-3 border d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <div class="portal-icon bg-light text-primary rounded-circle me-3 border">
                                 <i class="bi bi-speedometer2 fs-4"></i>
                             </div>
-                            <h4 class="fw-bold mb-0 text-dark">Admin Panel</h4>
+                            <div>
+                                <h4 class="fw-bold mb-0 text-dark">Admin Dashboard</h4>
+                                <span class="text-muted fs-8">Orders, menu, and QR tools</span>
+                            </div>
                         </div>
                         <p class="text-muted fs-7 flex-grow-1">
-                            Access order management dashboard. Track kitchen stats, filter orders, update preparation and payment statuses, and print table QR cards.
+                            View live order activity, update status, manage menu items, and generate confirmed table QR cards.
                         </p>
                         <a href="admin/dashboard.php" class="btn btn-portal-secondary py-2.5 rounded-pill mt-3">
                             <i class="bi bi-shield-lock me-2"></i> Open Admin Dashboard
@@ -127,44 +155,8 @@
                 </div>
             </div>
 
-            <!-- How it Works Flowchart Section -->
-            <div class="border-top pt-5">
-                <h5 class="fw-bold text-dark mb-4 text-center">Prototype Workflow</h5>
-                <div class="row g-4">
-                    <div class="col-sm-6 col-md-3">
-                        <div class="flow-step">
-                            <div class="flow-number">1</div>
-                            <h6 class="fw-bold text-dark mb-1">Scan QR</h6>
-                            <p class="text-muted fs-8 mb-0">Navigate to customer order page with table query parameter.</p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="flow-step">
-                            <div class="flow-number">2</div>
-                            <h6 class="fw-bold text-dark mb-1">Place Order</h6>
-                            <p class="text-muted fs-8 mb-0">Browse meals, adjust cart quantities, and submit details.</p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="flow-step">
-                            <div class="flow-number">3</div>
-                            <h6 class="fw-bold text-dark mb-1">Pay Mock</h6>
-                            <p class="text-muted fs-8 mb-0">Simulate success or failure gateway response outcomes.</p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="flow-step">
-                            <div class="flow-number">4</div>
-                            <h6 class="fw-bold text-dark mb-1">Manage</h6>
-                            <p class="text-muted fs-8 mb-0">Track kitchen metrics, update order stages, and print cards.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Setup Note -->
-            <div class="text-center text-muted mt-5 pt-3 border-top fs-8">
-                <i class="bi bi-info-circle me-1"></i> Make sure to import the database file <code class="text-primary fw-semibold">database/mini_qr_ordering_db.sql</code> into phpMyAdmin before running.
+            <div class="portal-credit text-center mt-5 pt-4 border-top">
+                Developed by <span class="fw-semibold text-dark">James Andrei N Revilla</span>
             </div>
 
         </div>

@@ -4,6 +4,18 @@
 
 Gourmet Express is a simple restaurant QR ordering system for a small restaurant. Customers can scan a table QR code, view the menu, add products to a cart, place an order, and simulate payment. Admin users can view orders, update order status, update payment status, and generate QR codes for tables.
 
+Live site:
+
+```text
+https://mini-qr-ordering.infinityfreeapp.com/
+```
+
+Credits:
+
+```text
+Developed by James Andrei N Revilla
+```
+
 ## Tech Stack
 
 - Frontend: HTML, CSS, JavaScript, Bootstrap 5
@@ -31,6 +43,7 @@ Gourmet Express is a simple restaurant QR ordering system for a small restaurant
 - Orders table
 - Order items table
 - Admin dashboard for viewing orders
+- Admin add menu item page
 - Admin order status update
 - Admin payment status update
 - Mock payment success and failure flow
@@ -41,6 +54,7 @@ Gourmet Express is a simple restaurant QR ordering system for a small restaurant
 Mini-Ordering-System
 |-- admin
 |   |-- dashboard.php
+|   |-- menu.php
 |   `-- qr_generator.php
 |-- api
 |   |-- db.php
@@ -105,25 +119,31 @@ mini_qr_ordering_db
 Open the portal page:
 
 ```text
-http://localhost/Mini-Ordering-System/
+https://mini-qr-ordering.infinityfreeapp.com/
 ```
 
 Customer ordering page example:
 
 ```text
-http://localhost/Mini-Ordering-System/customer/order.php?table=1
+https://mini-qr-ordering.infinityfreeapp.com/customer/order.php?table=1
 ```
 
 Admin dashboard:
 
 ```text
-http://localhost/Mini-Ordering-System/admin/dashboard.php
+https://mini-qr-ordering.infinityfreeapp.com/admin/dashboard.php
+```
+
+Admin menu management:
+
+```text
+https://mini-qr-ordering.infinityfreeapp.com/admin/menu.php
 ```
 
 QR generator:
 
 ```text
-http://localhost/Mini-Ordering-System/admin/qr_generator.php
+https://mini-qr-ordering.infinityfreeapp.com/admin/qr_generator.php
 ```
 
 ## Database
@@ -228,7 +248,7 @@ Generates a QR code as an SVG image using PHP.
 Example:
 
 ```text
-api/qr.php?size=170&data=https://yourdomain.com/customer/order.php?table=1
+api/qr.php?size=170&data=https://mini-qr-ordering.infinityfreeapp.com/customer/order.php?table=1
 ```
 
 ## Testing Guide
@@ -238,7 +258,7 @@ api/qr.php?size=170&data=https://yourdomain.com/customer/order.php?table=1
 1. Open:
 
 ```text
-http://localhost/Mini-Ordering-System/customer/order.php?table=1
+https://mini-qr-ordering.infinityfreeapp.com/customer/order.php?table=1
 ```
 
 2. Add products to cart.
@@ -262,7 +282,7 @@ http://localhost/Mini-Ordering-System/customer/order.php?table=1
 1. Open:
 
 ```text
-http://localhost/Mini-Ordering-System/admin/dashboard.php
+https://mini-qr-ordering.infinityfreeapp.com/admin/dashboard.php
 ```
 
 2. Confirm the order appears.
@@ -273,18 +293,24 @@ http://localhost/Mini-Ordering-System/admin/dashboard.php
 
 5. Test status filters.
 
-6. Keep the admin dashboard open.
+6. Open the menu management page.
 
-7. Place a new order from the customer page.
+7. Add a new product with name, description, price, category, availability, and image.
 
-8. Confirm the admin dashboard refreshes automatically after the order changes.
+8. Confirm the new product appears on the customer menu.
+
+9. Keep the admin dashboard open.
+
+10. Place a new order from the customer page.
+
+11. Confirm the admin dashboard refreshes automatically after the order changes.
 
 ### QR Test
 
 1. Open:
 
 ```text
-http://localhost/Mini-Ordering-System/admin/qr_generator.php
+https://mini-qr-ordering.infinityfreeapp.com/admin/qr_generator.php
 ```
 
 2. Enter a table number.

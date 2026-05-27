@@ -69,6 +69,9 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                 <a href="dashboard.php" class="text-decoration-none"><span class="fw-bold text-dark tracking-wide fs-5">GOURMET<span class="text-primary">ADMIN</span></span></a>
             </div>
             <div class="d-flex align-items-center gap-3">
+                <a href="menu.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                    <i class="bi bi-card-list me-1"></i> Menu
+                </a>
                 <a href="dashboard.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
                     <i class="bi bi-speedometer2 me-1"></i> Dashboard
                 </a>

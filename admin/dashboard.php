@@ -79,6 +79,9 @@ try {
                 <span class="fw-bold text-dark tracking-wide fs-5">GOURMET<span class="text-primary">ADMIN</span></span>
             </div>
             <div class="d-flex align-items-center gap-3">
+                <a href="menu.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                    <i class="bi bi-card-list me-1"></i> Menu
+                </a>
                 <a href="qr_generator.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
                     <i class="bi bi-qr-code me-1"></i> QR Generator
                 </a>
