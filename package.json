@@ -1,0 +1,14 @@
+{
+  "name": "mini-qr-ordering-system",
+  "version": "1.0.0",
+  "description": "Mini QR Ordering System for a small restaurant using PHP, MySQL, and Node.js",
+  "main": "index.php",
+  "scripts": {
+    "generate-qrs": "node admin/generate_qrs.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  },
+  "author": "",
+  "license": "ISC"
+}

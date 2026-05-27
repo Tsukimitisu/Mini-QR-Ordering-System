@@ -1,0 +1,175 @@
+<?php
+// api/orders.php
+require_once 'db.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+
+// Handle preflight CORS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+if ($method === 'GET') {
+    // Admin request: fetch all orders (sorted newest first, with optional status filtering)
+    try {
+        $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : '';
+        
+        $sql = "SELECT * FROM orders";
+        $params = [];
+        
+        if (!empty($statusFilter) && $statusFilter !== 'all') {
+            $sql .= " WHERE order_status = ?";
+            $params[] = $statusFilter;
+        }
+        
+        $sql .= " ORDER BY id DESC"; // Newest orders first
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $orders = $stmt->fetchAll();
+        
+        // Hydrate each order with its item lines
+        foreach ($orders as &$order) {
+            $itemStmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
+            $itemStmt->execute([$order['id']]);
+            $order['items'] = $itemStmt->fetchAll();
+        }
+        
+        echo json_encode([
+            'success' => true,
+            'data' => $orders
+        ]);
+    } catch (\PDOException $e) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to fetch orders: ' . $e->getMessage()
+        ]);
+    }
+} elseif ($method === 'POST') {
+    // Customer request: submit a new order
+    try {
+        // Read raw JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            throw new Exception("Invalid request payload. Content must be JSON.");
+        }
+        
+        $customerName = isset($input['customer_name']) ? htmlspecialchars(trim($input['customer_name'])) : '';
+        $tableNumber = isset($input['table_number']) ? intval($input['table_number']) : 0;
+        $items = isset($input['items']) ? $input['items'] : [];
+        
+        // 1. Basic Validations
+        if (empty($customerName)) {
+            throw new Exception("Customer name is required.");
+        }
+        if ($tableNumber <= 0) {
+            throw new Exception("Table number must be greater than 0.");
+        }
+        if (empty($items) || !is_array($items)) {
+            throw new Exception("Cart cannot be empty.");
+        }
+        
+        // Begin Database Transaction to ensure atomicity
+        $pdo->beginTransaction();
+        
+        $totalAmount = 0.00;
+        $orderItemsToInsert = [];
+        
+        // 2. Process items and verify prices securely
+        foreach ($items as $item) {
+            $productId = isset($item['product_id']) ? intval($item['product_id']) : 0;
+            $quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
+            
+            if ($productId <= 0) {
+                throw new Exception("Invalid product selection in cart.");
+            }
+            if ($quantity <= 0) {
+                throw new Exception("Quantity must be greater than 0.");
+            }
+            
+            // Query current item from the DB
+            $prodStmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+            $prodStmt->execute([$productId]);
+            $product = $prodStmt->fetch();
+            
+            if (!$product) {
+                throw new Exception("Selected product does not exist.");
+            }
+            
+            if (intval($product['availability_status']) !== 1) {
+                throw new Exception("The item '" . $product['product_name'] . "' is currently out of stock.");
+            }
+            
+            $price = floatval($product['price']);
+            $subtotal = $price * $quantity;
+            $totalAmount += $subtotal;
+            
+            $orderItemsToInsert[] = [
+                'product_id' => $product['id'],
+                'product_name' => $product['product_name'],
+                'quantity' => $quantity,
+                'price' => $price,
+                'subtotal' => $subtotal
+            ];
+        }
+        
+        // 3. Create core order record
+        $orderStmt = $pdo->prepare("
+            INSERT INTO orders (customer_name, table_number, total_amount, order_status, payment_status, payment_result) 
+            VALUES (?, ?, ?, 'pending', 'unpaid', NULL)
+        ");
+        $orderStmt->execute([$customerName, $tableNumber, $totalAmount]);
+        $orderId = $pdo->lastInsertId();
+        
+        // 4. Save items linking to order_id
+        $itemInsertStmt = $pdo->prepare("
+            INSERT INTO order_items (order_id, product_id, product_name, quantity, price, subtotal) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        foreach ($orderItemsToInsert as $oItem) {
+            $itemInsertStmt->execute([
+                $orderId,
+                $oItem['product_id'],
+                $oItem['product_name'],
+                $oItem['quantity'],
+                $oItem['price'],
+                $oItem['subtotal']
+            ]);
+        }
+        
+        // Commit transaction
+        $pdo->commit();
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Order placed successfully.',
+            'order_id' => $orderId,
+            'total_amount' => $totalAmount
+        ]);
+        
+    } catch (Exception $e) {
+        // Rollback on failure to prevent orphaned rows
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+} else {
+    http_response_code(405);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Method not allowed.'
+    ]);
+}
+?>
