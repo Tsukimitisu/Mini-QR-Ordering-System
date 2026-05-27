@@ -20,8 +20,6 @@ $customerUrlPattern = $protocol . $host . $baseDir;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
-    <!-- QRCode.js Library from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         .preview-wrapper {
             display: flex;
@@ -160,7 +158,6 @@ $customerUrlPattern = $protocol . $host . $baseDir;
 
     <!-- Script to manage dynamic QR rendering -->
     <script>
-        let qrGeneratorInstance = null;
         let confirmedTableNumber = null;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -219,19 +216,9 @@ $customerUrlPattern = $protocol . $host . $baseDir;
             const fullTargetUrl = baseUrl + "?table=" + tableNum;
             document.getElementById('confirmed-url-text').innerText = fullTargetUrl;
 
-            // Target canvas
             const canvasContainer = document.getElementById('qrcode-canvas');
-            canvasContainer.innerHTML = ''; // Clear previous
-
-            // Build QR Code
-            qrGeneratorInstance = new QRCode(canvasContainer, {
-                text: fullTargetUrl,
-                width: 170,
-                height: 170,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            const qrSrc = "../api/qr.php?size=170&data=" + encodeURIComponent(fullTargetUrl);
+            canvasContainer.innerHTML = '<img src="' + qrSrc + '" width="170" height="170" alt="QR code for Table ' + tableNum + '">';
 
             document.getElementById('qr-confirmation-message').className = "alert alert-success mt-4 mb-0 rounded-3 fs-7";
             document.getElementById('qr-confirmation-message').innerText = "Confirmed: QR code generated for Table " + tableNum + ".";

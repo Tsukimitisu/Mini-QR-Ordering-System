@@ -1,0 +1,5 @@
+INTERVIEW_READINESS.md
+node_modules/
+assets/images/qrcodes/
+package.json
+package-lock.json

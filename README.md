@@ -9,7 +9,7 @@ Gourmet Express is a simple restaurant QR ordering system for a small restaurant
 - Frontend: HTML, CSS, JavaScript, Bootstrap 5
 - Backend: PHP with PDO
 - Database: MySQL
-- QR Utility: Node.js with the qrcode package
+- QR Generation: PHP SVG endpoint
 - Local Server: XAMPP Apache and MySQL
 
 ## Features
@@ -41,12 +41,12 @@ Gourmet Express is a simple restaurant QR ordering system for a small restaurant
 Mini-Ordering-System
 |-- admin
 |   |-- dashboard.php
-|   |-- generate_qrs.js
 |   `-- qr_generator.php
 |-- api
 |   |-- db.php
 |   |-- orders.php
 |   |-- products.php
+|   |-- qr.php
 |   |-- update_order_status.php
 |   `-- update_payment_status.php
 |-- assets
@@ -60,7 +60,6 @@ Mini-Ordering-System
 |-- database
 |   `-- mini_qr_ordering_db.sql
 |-- index.php
-|-- package.json
 `-- README.md
 ```
 
@@ -125,26 +124,6 @@ QR generator:
 
 ```text
 http://localhost/Mini-Ordering-System/admin/qr_generator.php
-```
-
-## Optional QR Batch Generation
-
-Install Node dependencies:
-
-```text
-npm install
-```
-
-Generate QR PNG files:
-
-```text
-npm run generate-qrs
-```
-
-Generated QR images are saved in:
-
-```text
-assets/images/qrcodes
 ```
 
 ## Database
@@ -238,6 +217,20 @@ Allowed payment result values:
 - failed
 - null
 
+### GET QR Image
+
+```text
+api/qr.php
+```
+
+Generates a QR code as an SVG image using PHP.
+
+Example:
+
+```text
+api/qr.php?size=170&data=https://yourdomain.com/customer/order.php?table=1
+```
+
 ## Testing Guide
 
 ### Customer Test
@@ -300,7 +293,7 @@ http://localhost/Mini-Ordering-System/admin/qr_generator.php
 
 4. Accept the confirmation prompt.
 
-5. Confirm the QR code and table number update.
+5. Confirm the PHP-generated QR code and table number update.
 
 6. Print the table card if needed.
 
