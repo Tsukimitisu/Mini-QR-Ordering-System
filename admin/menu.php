@@ -312,11 +312,11 @@ try {
                                         <?php $inventoryFormId = 'inventory-form-' . intval($product['id']); ?>
                                         <tr>
                                             <td>
-                                                <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" class="rounded-3 border" style="width: 58px; height: 58px; object-fit: cover;">
+                                                <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" class="rounded-3 border menu-thumb">
                                             </td>
                                             <td>
                                                 <div class="fw-bold text-dark"><?php echo htmlspecialchars($product['product_name']); ?></div>
-                                                <div class="text-muted fs-7 text-truncate" style="max-width: 320px;">
+                                                <div class="text-muted fs-7 text-truncate menu-description">
                                                     <?php echo htmlspecialchars($product['description'] ?: 'No description'); ?>
                                                 </div>
                                             </td>
@@ -329,10 +329,10 @@ try {
                                                 ₱<?php echo number_format($product['price'], 2); ?>
                                             </td>
                                             <td>
-                                                <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7" name="stock_quantity" min="0" value="<?php echo $stockQuantity; ?>" style="width: 95px;">
+                                                <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7 inventory-stock-input" name="stock_quantity" min="0" value="<?php echo $stockQuantity; ?>">
                                             </td>
                                             <td>
-                                                <select form="<?php echo $inventoryFormId; ?>" class="form-select bg-light border text-dark fs-7" name="availability_status" style="width: 135px;">
+                                                <select form="<?php echo $inventoryFormId; ?>" class="form-select bg-light border text-dark fs-7 inventory-availability-select" name="availability_status">
                                                     <option value="1" <?php echo intval($product['availability_status']) === 1 ? 'selected' : ''; ?>>Available</option>
                                                     <option value="0" <?php echo intval($product['availability_status']) === 0 ? 'selected' : ''; ?>>Out of stock</option>
                                                 </select>
