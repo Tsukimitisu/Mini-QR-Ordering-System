@@ -21,80 +21,165 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        body.portal-page {
+            overflow-x: hidden;
+        }
+
         .portal-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 3rem 1rem;
+            padding: 2.25rem 1rem;
+            position: relative;
         }
+
+        .portal-container::before,
+        .portal-container::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+            filter: blur(16px);
+            opacity: 0.75;
+        }
+
+        .portal-container::before {
+            width: 260px;
+            height: 260px;
+            top: 2%;
+            left: 2%;
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.22), transparent 68%);
+        }
+
+        .portal-container::after {
+            width: 320px;
+            height: 320px;
+            right: -2%;
+            bottom: -6%;
+            background: radial-gradient(circle, rgba(15, 118, 110, 0.18), transparent 68%);
+        }
+
         .portal-card {
-            border: 1px solid var(--border-color) !important;
-            max-width: 920px;
+            position: relative;
+            z-index: 1;
+            max-width: 1040px;
             width: 100%;
+            border: 1px solid rgba(15, 23, 42, 0.08) !important;
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(20px);
         }
+
         .portal-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             color: var(--primary-color);
             font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
+            font-weight: 800;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px solid rgba(217, 119, 6, 0.14);
         }
+
         .portal-title {
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            line-height: 1.05;
+            font-size: clamp(2.2rem, 4vw, 4rem);
+            line-height: 0.98;
+            letter-spacing: 0.02em;
         }
+
         .portal-copy {
-            max-width: 680px;
+            max-width: 720px;
             margin: 0 auto;
+            font-size: 1.02rem;
         }
+
         .portal-action-card {
-            border: 1px solid var(--border-color);
-            background: var(--bg-white);
-            transition: border-color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 252, 0.95));
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
         }
+
         .portal-action-card:hover {
-            border-color: #cbd5e0;
-            transform: translateY(-2px);
+            border-color: rgba(217, 119, 6, 0.22);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
         }
+
+        .portal-action-card::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -20% auto;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.12), transparent 70%);
+            pointer-events: none;
+        }
+
         .portal-icon {
-            width: 46px;
-            height: 46px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
         }
+
+        .btn-portal-primary,
+        .btn-portal-secondary {
+            min-height: 48px;
+        }
+
         .btn-portal-primary {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #f59e0b);
             color: #ffffff;
-            font-weight: 600;
+            font-weight: 700;
             border: 0;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 14px 28px rgba(217, 119, 6, 0.24);
         }
+
         .btn-portal-primary:hover {
             transform: translateY(-2px);
-            background-color: var(--primary-hover);
             color: #ffffff;
+            box-shadow: 0 18px 34px rgba(217, 119, 6, 0.3);
         }
+
         .btn-portal-secondary {
-            background-color: var(--bg-light);
+            background: rgba(255, 255, 255, 0.92);
             color: var(--text-main);
-            border: 1px solid var(--border-color);
-            font-weight: 600;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(15, 23, 42, 0.10);
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
+
         .btn-portal-secondary:hover {
             transform: translateY(-2px);
-            background-color: #e2e8f0;
+            background: #ffffff;
             color: var(--text-main);
+            border-color: rgba(15, 23, 42, 0.16);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
         }
+
         .portal-credit {
             color: var(--text-muted);
             font-size: 0.85rem;
         }
+
+        @media (max-width: 767.98px) {
+            .portal-container {
+                padding: 1.25rem 0.75rem;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="portal-page">
 
     <div class="portal-container">
         <div class="card portal-card rounded-4 p-4 p-md-5 bg-white text-dark shadow-sm">
