@@ -26,12 +26,29 @@ $customerUrlPattern = $protocol . $host . $baseDir;
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        .qr-generator-shell {
+            position: relative;
+        }
+
         .preview-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 400px;
+            min-height: 420px;
         }
+
+        .qr-preview-card {
+            width: min(100%, 350px);
+        }
+
+        .qr-preview-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.04), rgba(15, 118, 110, 0.03));
+            pointer-events: none;
+        }
+
         @media print {
             body {
                 background: #ffffff !important;
@@ -39,18 +56,24 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                 margin: 0;
                 padding: 0;
             }
-            .admin-header, 
+
+            .admin-header,
             .no-print,
             .toast-container,
             button,
             footer {
                 display: none !important;
             }
-            .container-fluid, .row, .col-lg-5, .col-lg-7 {
+
+            .container-fluid,
+            .row,
+            .col-lg-5,
+            .col-lg-7 {
                 width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
+
             .print-card-outer {
                 border: 2px dashed #bbb !important;
                 margin: 40px auto !important;
@@ -87,7 +110,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
         </div>
     </header>
 
-    <div class="container my-5">
+    <div class="container my-5 qr-generator-shell">
         <div class="row g-5">
             <!-- Left Side: Controls -->
             <div class="col-lg-5 no-print">
@@ -130,8 +153,8 @@ $customerUrlPattern = $protocol . $host . $baseDir;
             </div>
 
             <!-- Right Side: Live Table Card Preview -->
-            <div class="col-lg-7 d-flex justify-content-center">
-                <div class="print-card-outer card rounded-4 text-center shadow-sm bg-white text-dark" style="width: 350px; border: 1px solid var(--border-color) !important;">
+            <div class="col-lg-7 d-flex justify-content-center preview-wrapper">
+                <div class="print-card-outer qr-preview-card card rounded-4 text-center shadow-sm bg-white text-dark">
                     
                     <!-- Restaurant Branding -->
                     <div class="brand-logo mt-5 mb-4 text-dark">
@@ -145,7 +168,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
 
                     <!-- QR Display Frame -->
                     <div class="d-flex justify-content-center mb-4">
-                        <div class="qr-print-frame bg-white p-3 rounded-4 border d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; border-color: var(--border-color) !important;">
+                        <div class="qr-print-frame bg-white p-3 rounded-4 border d-flex align-items-center justify-content-center">
                             <div id="qrcode-canvas"></div>
                         </div>
                     </div>
