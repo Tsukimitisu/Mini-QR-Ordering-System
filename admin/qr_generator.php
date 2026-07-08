@@ -251,7 +251,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
 
             const canvasContainer = document.getElementById('qrcode-canvas');
             const qrSrc = "../api/qr.php?size=170&data=" + encodeURIComponent(fullTargetUrl);
-            canvasContainer.innerHTML = '<img src="' + qrSrc + '" width="170" height="170" alt="QR code for Table ' + tableNum + '">';
+            canvasContainer.innerHTML = '<img src="' + qrSrc + '" width="170" height="170" alt="QR code for Table ' + tableNum + '" decoding="async">';
 
             document.getElementById('qr-confirmation-message').className = "alert alert-success mt-4 mb-0 rounded-3 fs-7";
             document.getElementById('qr-confirmation-message').innerText = "Confirmed: QR code generated for Table " + tableNum + ".";

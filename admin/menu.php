@@ -314,7 +314,7 @@ try {
                                         <?php $inventoryFormId = 'inventory-form-' . intval($product['id']); ?>
                                         <tr>
                                             <td>
-                                                <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" class="rounded-3 border menu-thumb">
+                                                <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" class="rounded-3 border menu-thumb" loading="lazy" decoding="async">
                                             </td>
                                             <td>
                                                 <div class="fw-bold text-dark"><?php echo htmlspecialchars($product['product_name']); ?></div>

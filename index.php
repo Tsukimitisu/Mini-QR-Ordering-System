@@ -80,7 +80,7 @@
                     <div class="col-lg-6">
                         <div class="portal-menu-preview" aria-label="Featured menu items">
                             <div class="portal-featured-item portal-featured-large">
-                                <img src="assets/images/cheeseburger.png" alt="Classic Cheeseburger">
+                                <img src="assets/images/cheeseburger.png" alt="Classic Cheeseburger" decoding="async" fetchpriority="high">
                                 <div>
                                     <span>Featured</span>
                                     <strong>Classic Cheeseburger</strong>
@@ -88,14 +88,14 @@
                             </div>
                             <div class="portal-featured-stack">
                                 <div class="portal-featured-item">
-                                    <img src="assets/images/pizza.png" alt="Pepperoni Pizza">
+                                    <img src="assets/images/pizza.png" alt="Pepperoni Pizza" loading="lazy" decoding="async">
                                     <div>
                                         <span>Popular</span>
                                         <strong>Pepperoni Pizza</strong>
                                     </div>
                                 </div>
                                 <div class="portal-featured-item">
-                                    <img src="assets/images/iced_tea.png" alt="Sweet Iced Tea">
+                                    <img src="assets/images/iced_tea.png" alt="Sweet Iced Tea" loading="lazy" decoding="async">
                                     <div>
                                         <span>Drink</span>
                                         <strong>Sweet Iced Tea</strong>

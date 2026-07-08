@@ -130,7 +130,7 @@ function renderCart() {
             
             html += `
                 <div class="cart-item d-flex align-items-center mb-3 p-2 rounded-3">
-                    <img src="${item.image}" alt="${item.product_name}" class="rounded-3 me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                    <img src="${item.image}" alt="${item.product_name}" class="rounded-3 me-3" style="width: 50px; height: 50px; object-fit: cover;" loading="lazy" decoding="async">
                     <div class="flex-grow-1">
                         <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${item.product_name}</h6>
                         <span class="text-primary fw-semibold fs-7">₱${item.price.toFixed(2)}</span>

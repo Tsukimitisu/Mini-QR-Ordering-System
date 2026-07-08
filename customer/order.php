@@ -101,7 +101,7 @@ try {
                                     <div class="col-md-6">
                                         <div class="card product-card h-100 rounded-4 overflow-hidden border bg-white <?php echo !$isAvailable ? 'out-of-stock-card' : ''; ?>">
                                             <div class="position-relative overflow-hidden product-image-wrapper">
-                                                <img src="../assets/images/<?php echo htmlspecialchars($item['image']); ?>" class="card-img-top product-img" alt="<?php echo htmlspecialchars($item['product_name']); ?>">
+                                                <img src="../assets/images/<?php echo htmlspecialchars($item['image']); ?>" class="card-img-top product-img" alt="<?php echo htmlspecialchars($item['product_name']); ?>" loading="lazy" decoding="async">
                                                 <?php if (!$isAvailable): ?>
                                                     <div class="out-of-stock-overlay d-flex align-items-center justify-content-center">
                                                         <span class="badge bg-danger text-white fs-6 px-3 py-2 rounded-pill shadow-sm">Sold Out</span>
