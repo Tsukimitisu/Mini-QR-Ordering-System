@@ -790,6 +790,16 @@ a {
     min-width: 880px;
 }
 
+.table-responsive {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+}
+
+.table-responsive > .table {
+    margin-bottom: 0;
+}
+
 .custom-admin-table thead th {
     background: #f8fafc !important;
     color: var(--text-muted) !important;
@@ -811,6 +821,10 @@ a {
 
 .custom-admin-table tbody tr:hover td {
     background: rgba(217, 119, 6, 0.04) !important;
+}
+
+.custom-admin-table tbody tr:last-child td {
+    border-bottom: 0 !important;
 }
 
 .select-status,
