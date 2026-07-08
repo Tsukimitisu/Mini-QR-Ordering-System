@@ -130,20 +130,20 @@ function renderCart() {
             
             html += `
                 <div class="cart-item d-flex align-items-center mb-3 p-2 rounded-3">
-                    <img src="${item.image}" alt="${item.product_name}" class="rounded-3 me-3" style="width: 50px; height: 50px; object-fit: cover;" loading="lazy" decoding="async">
+                    <img src="${item.image}" alt="${item.product_name}" class="cart-item-img rounded-3 me-3" loading="lazy" decoding="async">
                     <div class="flex-grow-1">
                         <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${item.product_name}</h6>
                         <span class="text-primary fw-semibold fs-7">₱${item.price.toFixed(2)}</span>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, -1)">
+                    <div class="cart-controls d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, -1)" aria-label="Decrease ${item.product_name} quantity">
                             <i class="bi bi-minus-lg fs-8 text-dark"></i>
                         </button>
-                        <span class="fw-bold text-dark px-1 fs-7">${item.quantity}</span>
-                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, 1)">
+                        <span class="cart-quantity fw-bold text-dark px-1 fs-7">${item.quantity}</span>
+                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, 1)" aria-label="Increase ${item.product_name} quantity">
                             <i class="bi bi-plus-lg fs-8 text-dark"></i>
                         </button>
-                        <button class="btn btn-sm text-danger-custom ms-2 p-1 bg-transparent border-0" onclick="removeFromCart(${item.product_id})">
+                        <button class="btn btn-sm text-danger-custom ms-2 p-1 bg-transparent border-0" onclick="removeFromCart(${item.product_id})" aria-label="Remove ${item.product_name} from cart">
                             <i class="bi bi-trash3-fill"></i>
                         </button>
                     </div>
