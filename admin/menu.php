@@ -190,13 +190,13 @@ try {
                 </a>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="dashboard.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="dashboard.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open admin dashboard">
                     <i class="bi bi-speedometer2 me-1"></i> Dashboard
                 </a>
-                <a href="qr_generator.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="qr_generator.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open QR generator">
                     <i class="bi bi-qr-code me-1"></i> QR Generator
                 </a>
-                <a href="../customer/order.php" target="_blank" class="btn btn-warning rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="../customer/order.php" target="_blank" rel="noopener" class="btn btn-warning rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open customer menu in a new tab">
                     <i class="bi bi-shop me-1"></i> Customer Menu
                 </a>
             </div>

@@ -28,10 +28,10 @@
                 <span class="fw-bold text-dark tracking-wide fs-5">GOURMET<span class="text-primary">EXPRESS</span></span>
             </a>
             <div class="d-flex align-items-center gap-2 portal-nav-actions">
-                <a href="customer/order.php?table=1" class="btn btn-portal-secondary">
+                <a href="customer/order.php?table=1" class="btn btn-portal-secondary" aria-label="Open customer menu for table 1">
                     <i class="bi bi-qr-code-scan me-2"></i>Customer Menu
                 </a>
-                <a href="admin/dashboard.php" class="btn btn-portal-primary">
+                <a href="admin/dashboard.php" class="btn btn-portal-primary" aria-label="Open admin dashboard">
                     <i class="bi bi-speedometer2 me-2"></i>Admin
                 </a>
             </div>
@@ -53,10 +53,10 @@
                         </p>
 
                         <div class="d-flex flex-wrap gap-3 mb-4">
-                            <a href="customer/order.php?table=1" class="btn btn-portal-primary btn-lg">
+                            <a href="customer/order.php?table=1" class="btn btn-portal-primary btn-lg" aria-label="Open table one customer menu">
                                 <i class="bi bi-phone me-2"></i>Open Table Menu
                             </a>
-                            <a href="admin/dashboard.php" class="btn btn-portal-secondary btn-lg">
+                            <a href="admin/dashboard.php" class="btn btn-portal-secondary btn-lg" aria-label="Open staff admin dashboard">
                                 <i class="bi bi-shield-lock me-2"></i>Open Admin
                             </a>
                         </div>
@@ -112,21 +112,21 @@
             <div class="container">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <a href="customer/order.php?table=1" class="portal-route text-decoration-none">
+                        <a href="customer/order.php?table=1" class="portal-route text-decoration-none" aria-label="Open customer ordering sample menu">
                             <i class="bi bi-phone"></i>
                             <span>Customer Ordering</span>
                             <small>Table 1 sample menu</small>
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a href="admin/menu.php" class="portal-route text-decoration-none">
+                        <a href="admin/menu.php" class="portal-route text-decoration-none" aria-label="Open menu management">
                             <i class="bi bi-card-list"></i>
                             <span>Menu Management</span>
                             <small>Products, stock, availability</small>
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a href="admin/qr_generator.php" class="portal-route text-decoration-none">
+                        <a href="admin/qr_generator.php" class="portal-route text-decoration-none" aria-label="Open QR generator">
                             <i class="bi bi-qr-code"></i>
                             <span>QR Generator</span>
                             <small>Printable table cards</small>

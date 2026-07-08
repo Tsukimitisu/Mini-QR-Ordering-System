@@ -99,13 +99,13 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                 <a href="dashboard.php" class="text-decoration-none"><span class="fw-bold text-dark tracking-wide fs-5">GOURMET<span class="text-primary">ADMIN</span></span></a>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="menu.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="menu.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open menu management">
                     <i class="bi bi-card-list me-1"></i> Menu
                 </a>
-                <a href="dashboard.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="dashboard.php" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open admin dashboard">
                     <i class="bi bi-speedometer2 me-1"></i> Dashboard
                 </a>
-                <a href="../customer/order.php" target="_blank" class="btn btn-warning rounded-pill px-3 py-1.5 fw-semibold fs-7">
+                <a href="../customer/order.php" target="_blank" rel="noopener" class="btn btn-warning rounded-pill px-3 py-1.5 fw-semibold fs-7" aria-label="Open customer menu in a new tab">
                     <i class="bi bi-shop me-1"></i> Customer Menu
                 </a>
             </div>

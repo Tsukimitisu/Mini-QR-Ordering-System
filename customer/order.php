@@ -51,7 +51,7 @@ try {
                 <i class="bi bi-egg-fried text-primary me-2 fs-4"></i>
                 <span class="fw-bold text-dark tracking-wide fs-5">GOURMET<span class="text-primary">EXPRESS</span></span>
             </div>
-            <div class="table-badge px-3 py-1.5 rounded-pill text-dark border bg-light">
+            <div class="table-badge px-3 py-1.5 rounded-pill text-dark border bg-light" aria-label="Current table number">
                 <i class="bi bi-tag-fill text-primary me-1"></i>
                 <span class="fw-semibold">Table <?php echo $tableNumber ? $tableNumber : 'Not Specified'; ?></span>
             </div>
@@ -71,10 +71,10 @@ try {
                 </div>
 
                 <!-- Category Filters (Horizontal Scrollable) -->
-                <div class="category-nav d-flex gap-2 overflow-auto pb-3 mb-4 scrollbar-none">
-                    <button class="btn btn-category active text-nowrap rounded-pill px-4" onclick="filterCategory('all')">All Menu</button>
+                <div class="category-nav d-flex gap-2 overflow-auto pb-3 mb-4 scrollbar-none" aria-label="Menu categories">
+                    <button type="button" class="btn btn-category active text-nowrap rounded-pill px-4" onclick="filterCategory('all')">All Menu</button>
                     <?php foreach (array_keys($menu) as $cat): ?>
-                        <button class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory('<?php echo htmlspecialchars($cat); ?>')">
+                        <button type="button" class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory('<?php echo htmlspecialchars($cat); ?>')">
                             <?php echo htmlspecialchars($cat); ?>
                         </button>
                     <?php endforeach; ?>
