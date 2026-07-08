@@ -526,6 +526,7 @@ a {
 
 .qr-preview-card {
     width: min(100%, 350px);
+    overflow-wrap: anywhere;
 }
 
 .qr-print-frame {
@@ -879,6 +880,11 @@ a {
     box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04), 0 12px 24px rgba(15, 23, 42, 0.08);
 }
 
+#confirmed-url-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 .table-shield-banner {
     background: var(--primary-color) !important;
     color: #ffffff !important;
@@ -1028,5 +1034,17 @@ a {
     body {
         background: #ffffff !important;
         color: #000000 !important;
+    }
+
+    .skip-link {
+        display: none !important;
+    }
+
+    .qr-preview-card {
+        width: 340px !important;
+    }
+
+    .qr-print-frame {
+        box-shadow: none !important;
     }
 }
