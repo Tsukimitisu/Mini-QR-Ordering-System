@@ -179,6 +179,8 @@ try {
 </head>
 <body class="admin-body">
 
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <header class="admin-header sticky-top py-3">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
             <div class="brand-logo">
@@ -201,7 +203,7 @@ try {
         </div>
     </header>
 
-    <main class="container-fluid px-4 my-4">
+    <main id="main-content" class="container-fluid px-4 my-4">
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="card border rounded-4 bg-white text-dark shadow-sm p-4">

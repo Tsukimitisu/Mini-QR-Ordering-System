@@ -71,6 +71,26 @@ a {
     transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
+.skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2000;
+    transform: translateY(-160%);
+    background: var(--text-main);
+    color: #ffffff;
+    border-radius: var(--radius-md);
+    padding: 0.7rem 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: var(--shadow-strong);
+}
+
+.skip-link:focus {
+    color: #ffffff;
+    transform: translateY(0);
+}
+
 .text-primary {
     color: var(--primary-color) !important;
 }

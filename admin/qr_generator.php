@@ -89,6 +89,8 @@ $customerUrlPattern = $protocol . $host . $baseDir;
 </head>
 <body class="admin-body">
 
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Top Admin Header -->
     <header class="admin-header sticky-top py-3 no-print">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
@@ -110,7 +112,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
         </div>
     </header>
 
-    <div class="container my-5 qr-generator-shell">
+    <main id="main-content" class="container my-5 qr-generator-shell">
         <div class="row g-5">
             <!-- Left Side: Controls -->
             <div class="col-lg-5 no-print">
@@ -185,7 +187,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Script to manage dynamic QR rendering -->
     <script>

@@ -19,6 +19,8 @@
 </head>
 <body class="portal-page">
 
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <header class="portal-nav">
         <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
             <a href="index.php" class="brand-logo text-decoration-none">
@@ -36,7 +38,7 @@
         </div>
     </header>
 
-    <main class="portal-main">
+    <main id="main-content" class="portal-main">
         <section class="portal-hero">
             <div class="container">
                 <div class="row align-items-center g-5">

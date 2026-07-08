@@ -42,6 +42,8 @@ try {
 </head>
 <body>
 
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Header / Navbar -->
     <header class="menu-header sticky-top py-3">
         <div class="container d-flex justify-content-between align-items-center">
@@ -57,7 +59,7 @@ try {
     </header>
 
     <!-- Main Content -->
-    <main class="container my-4">
+    <main id="main-content" class="container my-4">
         <div class="row g-4">
             <!-- Left Side: Menu Items -->
             <div class="col-lg-8">

@@ -76,6 +76,8 @@ try {
 </head>
 <body class="admin-body">
 
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Top Admin Header -->
     <header class="admin-header sticky-top py-3">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
@@ -97,7 +99,7 @@ try {
         </div>
     </header>
 
-    <div class="container-fluid px-4 my-4">
+    <main id="main-content" class="container-fluid px-4 my-4">
         <!-- Summary Cards -->
         <div class="row g-4 mb-4">
             <!-- Total Orders -->
@@ -258,7 +260,7 @@ try {
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
 
     <!-- Bootstrap Toast for alerts -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
