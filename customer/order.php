@@ -145,11 +145,11 @@ try {
                 <div class="checkout-panel sticky-panel rounded-4 p-4 border bg-white text-dark">
                     <h4 class="fw-bold mb-4 d-flex justify-content-between align-items-center text-dark border-bottom pb-3">
                         <span><i class="bi bi-cart3 text-primary me-2"></i>My Cart</span>
-                        <span class="badge bg-primary text-white rounded-pill fs-7" id="cart-count">0</span>
+                        <span class="badge bg-primary text-white rounded-pill fs-7" id="cart-count" aria-live="polite">0</span>
                     </h4>
 
                     <!-- Cart Item Container -->
-                    <div id="cart-items" class="cart-items-container mb-4 overflow-auto scrollbar-thin">
+                    <div id="cart-items" class="cart-items-container mb-4 overflow-auto scrollbar-thin" aria-live="polite">
                         <!-- Filled by JS -->
                         <div class="text-center text-muted py-5">
                             <i class="bi bi-basket3 fs-1 text-muted mb-3 d-block"></i>
@@ -161,7 +161,7 @@ try {
                     <div class="totals-section border-top pt-3 mb-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Subtotal</span>
-                            <span class="fw-semibold text-dark" id="cart-subtotal">₱0.00</span>
+                            <span class="fw-semibold text-dark" id="cart-subtotal" aria-live="polite">₱0.00</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Service Tax (0%)</span>
@@ -170,7 +170,7 @@ try {
                         <hr class="my-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="fw-bold text-dark">Total Amount</span>
-                            <span class="fw-bold text-primary fs-4" id="cart-total">₱0.00</span>
+                            <span class="fw-bold text-primary fs-4" id="cart-total" aria-live="polite">₱0.00</span>
                         </div>
                     </div>
 
@@ -203,7 +203,7 @@ try {
     <div class="mobile-cart-sticky-bar d-lg-none fixed-bottom p-3 border-top shadow-sm">
         <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold d-flex justify-content-between align-items-center" onclick="scrollToCart()">
             <span><i class="bi bi-cart-fill me-2"></i> View Cart & Checkout</span>
-            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total">₱0.00</span>
+            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total" aria-live="polite">₱0.00</span>
         </button>
     </div>
 

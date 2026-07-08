@@ -116,7 +116,7 @@ function renderCart() {
     
     if (cart.length === 0) {
         cartContainer.innerHTML = `
-            <div class="text-center text-muted py-5">
+            <div class="text-center text-muted py-5" role="status">
                 <i class="bi bi-basket3 fs-1 text-muted mb-3 d-block"></i>
                 <span>Your cart is empty.</span>
             </div>
