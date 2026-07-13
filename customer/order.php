@@ -74,7 +74,7 @@ try {
                 <div class="category-nav d-flex gap-2 overflow-auto pb-3 mb-4 scrollbar-none" aria-label="Menu categories">
                     <button type="button" class="btn btn-category active text-nowrap rounded-pill px-4" onclick="filterCategory('all')">All Menu</button>
                     <?php foreach (array_keys($menu) as $cat): ?>
-                        <button type="button" class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory('<?php echo htmlspecialchars($cat); ?>')">
+                        <button type="button" class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory(<?php echo json_encode($cat, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>)">
                             <?php echo htmlspecialchars($cat); ?>
                         </button>
                     <?php endforeach; ?>
@@ -95,6 +95,10 @@ try {
                             </h3>
                             <div class="row g-4">
                                 <?php foreach ($items as $item): 
+                                    $productId = intval($item['id']);
+                                    $productPrice = number_format((float) $item['price'], 2, '.', '');
+                                    $productNameJson = json_encode($item['product_name'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+                                    $productImageJson = json_encode('../assets/images/' . $item['image'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
                                     $stockQuantity = isset($item['stock_quantity']) ? intval($item['stock_quantity']) : 0;
                                     $isAvailable = intval($item['availability_status']) === 1 && $stockQuantity > 0;
                                 ?>
@@ -121,7 +125,7 @@ try {
                                                     </span>
                                                     <?php if ($isAvailable): ?>
                                                         <button class="btn btn-warning btn-sm rounded-pill px-3 py-2 fw-semibold add-to-cart-btn" 
-                                                                onclick="addToCart(<?php echo $item['id']; ?>, '<?php echo htmlspecialchars(addslashes($item['product_name'])); ?>', <?php echo $item['price']; ?>, '../assets/images/<?php echo htmlspecialchars($item['image']); ?>', <?php echo $stockQuantity; ?>)">
+                                                                onclick="addToCart(<?php echo $productId; ?>, <?php echo $productNameJson; ?>, <?php echo $productPrice; ?>, <?php echo $productImageJson; ?>, <?php echo $stockQuantity; ?>)">
                                                             <i class="bi bi-plus-lg me-1"></i> Add
                                                         </button>
                                                     <?php else: ?>
