@@ -1,25 +1,18 @@
 <?php
 // api/update_payment_status.php
-require_once 'db.php';
+require_once 'helpers.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
-// Handle preflight CORS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
+requirePostMethod();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
-    exit;
-}
+require_once 'db.php';
 
 try {
-    $input = json_decode(file_get_contents('php://input'), true);
+    $input = readJsonRequestBody();
     
     $orderId = isset($input['order_id']) ? intval($input['order_id']) : 0;
     $paymentStatus = isset($input['payment_status']) ? trim($input['payment_status']) : '';
@@ -29,14 +22,24 @@ try {
         throw new Exception("Invalid order ID.");
     }
     
-    $allowedPaymentStatuses = ['unpaid', 'paid', 'failed'];
-    if (!in_array($paymentStatus, $allowedPaymentStatuses)) {
+    if (!in_array($paymentStatus, allowedPaymentStatuses(), true)) {
         throw new Exception("Invalid payment status value.");
     }
     
-    $allowedResults = ['success', 'failed', null];
-    if (!in_array($paymentResult, $allowedResults, true)) {
+    if (!in_array($paymentResult, allowedPaymentResults(), true)) {
         throw new Exception("Invalid payment result value.");
+    }
+
+    if ($paymentStatus === 'paid' && $paymentResult !== 'success') {
+        throw new Exception("Paid orders must have a success payment result.");
+    }
+
+    if ($paymentStatus === 'failed' && $paymentResult !== 'failed') {
+        throw new Exception("Failed payments must have a failed payment result.");
+    }
+
+    if ($paymentStatus === 'unpaid' && $paymentResult !== null) {
+        throw new Exception("Unpaid orders cannot have a payment result.");
     }
     
     // Check if order exists
@@ -50,15 +53,14 @@ try {
     $stmt = $pdo->prepare("UPDATE orders SET payment_status = ?, payment_result = ? WHERE id = ?");
     $stmt->execute([$paymentStatus, $paymentResult, $orderId]);
     
-    echo json_encode([
+    sendJsonResponse([
         'success' => true,
         'message' => 'Payment details updated successfully.'
     ]);
 } catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode([
+    sendJsonResponse([
         'success' => false,
         'message' => $e->getMessage()
-    ]);
+    ], 400);
 }
 ?>
