@@ -184,14 +184,14 @@ try {
                             <label for="customerName" class="form-label text-muted fs-7">Customer Name *</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted border"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control bg-light border text-dark" id="customerName" placeholder="Enter your name" required>
+                                <input type="text" class="form-control bg-light border text-dark" id="customerName" placeholder="Enter your name" maxlength="80" required>
                             </div>
                         </div>
                         <div class="mb-4">
                             <label for="tableNumber" class="form-label text-muted fs-7">Table Number *</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted border"><i class="bi bi-tag-fill"></i></span>
-                                <input type="number" class="form-control bg-light border text-dark" id="tableNumber" placeholder="Table #" min="1" value="<?php echo $tableNumber; ?>" required <?php echo $tableNumber ? 'readonly' : ''; ?>>
+                                <input type="number" class="form-control bg-light border text-dark" id="tableNumber" placeholder="Table #" min="1" max="999" value="<?php echo $tableNumber; ?>" required <?php echo $tableNumber ? 'readonly' : ''; ?>>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-warning w-100 py-3 rounded-pill fw-bold checkout-submit-btn">

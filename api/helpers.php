@@ -45,4 +45,19 @@ function allowedPaymentResults(): array
 {
     return ['success', 'failed', null];
 }
+
+function maxCustomerNameLength(): int
+{
+    return 80;
+}
+
+function maxTableNumber(): int
+{
+    return 999;
+}
+
+function maxOrderItemQuantity(): int
+{
+    return 99;
+}
 ?>

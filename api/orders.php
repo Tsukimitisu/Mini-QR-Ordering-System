@@ -64,7 +64,8 @@ if ($method === 'GET') {
     try {
         $input = readJsonRequestBody();
         
-        $customerName = isset($input['customer_name']) ? htmlspecialchars(trim($input['customer_name'])) : '';
+        $customerNameRaw = isset($input['customer_name']) ? trim($input['customer_name']) : '';
+        $customerName = htmlspecialchars($customerNameRaw);
         $tableNumber = isset($input['table_number']) ? intval($input['table_number']) : 0;
         $items = isset($input['items']) ? $input['items'] : [];
         
@@ -72,8 +73,14 @@ if ($method === 'GET') {
         if (empty($customerName)) {
             throw new Exception("Customer name is required.");
         }
+        if (strlen($customerNameRaw) > maxCustomerNameLength()) {
+            throw new Exception("Customer name must be " . maxCustomerNameLength() . " characters or fewer.");
+        }
         if ($tableNumber <= 0) {
             throw new Exception("Table number must be greater than 0.");
+        }
+        if ($tableNumber > maxTableNumber()) {
+            throw new Exception("Table number must be " . maxTableNumber() . " or lower.");
         }
         if (empty($items) || !is_array($items)) {
             throw new Exception("Cart cannot be empty.");
@@ -95,6 +102,9 @@ if ($method === 'GET') {
             }
             if ($quantity <= 0) {
                 throw new Exception("Quantity must be greater than 0.");
+            }
+            if ($quantity > maxOrderItemQuantity()) {
+                throw new Exception("Quantity cannot exceed " . maxOrderItemQuantity() . " per item.");
             }
 
             if (!isset($mergedItems[$productId])) {

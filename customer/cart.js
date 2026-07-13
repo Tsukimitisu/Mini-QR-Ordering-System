@@ -14,6 +14,8 @@ function loadCartFromStorage() {
 // Initialize cart from localStorage or empty array
 let cart = loadCartFromStorage();
 const CART_CURRENCY_SYMBOL = '\u20b1';
+const MAX_CUSTOMER_NAME_LENGTH = 80;
+const MAX_TABLE_NUMBER = 999;
 
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -233,8 +235,13 @@ function submitOrder(event) {
         alert("Customer name is required.");
         return;
     }
+
+    if (customerName.length > MAX_CUSTOMER_NAME_LENGTH) {
+        alert(`Customer name must be ${MAX_CUSTOMER_NAME_LENGTH} characters or fewer.`);
+        return;
+    }
     
-    if (isNaN(tableNumber) || tableNumber <= 0) {
+    if (isNaN(tableNumber) || tableNumber <= 0 || tableNumber > MAX_TABLE_NUMBER) {
         alert("Please enter a valid table number.");
         return;
     }
