@@ -44,7 +44,7 @@ if ($method === 'GET') {
         
         // Hydrate each order with its item lines
         foreach ($orders as &$order) {
-            $itemStmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
+            $itemStmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ? ORDER BY id ASC");
             $itemStmt->execute([$order['id']]);
             $order['items'] = $itemStmt->fetchAll();
         }
