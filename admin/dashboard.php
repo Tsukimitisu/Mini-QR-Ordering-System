@@ -192,7 +192,7 @@ try {
 
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger rounded-3" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $error; ?>
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo htmlspecialchars($error); ?>
                 </div>
             <?php elseif (empty($orders)): ?>
                 <div class="text-center text-muted py-5">
@@ -216,35 +216,39 @@ try {
                         </thead>
                         <tbody>
                             <?php foreach ($orders as $order): ?>
-                                <tr id="order-row-<?php echo $order['id']; ?>">
-                                    <td class="fw-bold text-dark">#<?php echo $order['id']; ?></td>
+                                <?php
+                                    $orderId = intval($order['id']);
+                                    $tableNumberDisplay = intval($order['table_number']);
+                                ?>
+                                <tr id="order-row-<?php echo $orderId; ?>">
+                                    <td class="fw-bold text-dark">#<?php echo $orderId; ?></td>
                                     <td>
                                         <div class="fw-semibold text-dark"><?php echo htmlspecialchars($order['customer_name']); ?></div>
                                     </td>
                                     <td>
-                                        <span class="badge border text-dark rounded-pill px-2.5 py-1.5 fw-bold">T-<?php echo $order['table_number']; ?></span>
+                                        <span class="badge border text-dark rounded-pill px-2.5 py-1.5 fw-bold">T-<?php echo $tableNumberDisplay; ?></span>
                                     </td>
                                     <td>
                                         <div class="order-items-summary py-1">
                                             <ul class="list-unstyled mb-0 fs-7">
                                                 <?php foreach ($order['items'] as $item): ?>
                                                     <li class="text-muted mb-1">
-                                                        <span class="text-dark fw-medium"><?php echo $item['quantity']; ?>x</span> 
+                                                        <span class="text-dark fw-medium"><?php echo intval($item['quantity']); ?>x</span> 
                                                         <?php echo htmlspecialchars($item['product_name']); ?> 
-                                                        <span class="text-secondary">(&#8369;<?php echo number_format($item['price'], 2); ?>)</span>
+                                                        <span class="text-secondary">(&#8369;<?php echo number_format((float) $item['price'], 2); ?>)</span>
                                                     </li>
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>
                                     </td>
                                     <td class="fw-bold text-primary fs-6">
-                                        &#8369;<?php echo number_format($order['total_amount'], 2); ?>
+                                        &#8369;<?php echo number_format((float) $order['total_amount'], 2); ?>
                                     </td>
                                     <td>
                                         <!-- Order Status Selector -->
                                         <select class="form-select select-status rounded-pill py-1.5 px-3 fs-7 border" 
-                                                data-order-id="<?php echo $order['id']; ?>" 
-                                                onchange="updateOrderStatus(<?php echo $order['id']; ?>, this)">
+                                                data-order-id="<?php echo $orderId; ?>" 
+                                                onchange="updateOrderStatus(<?php echo $orderId; ?>, this)">
                                             <option value="pending" <?php echo $order['order_status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
                                             <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
                                             <option value="completed" <?php echo $order['order_status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
@@ -254,8 +258,8 @@ try {
                                     <td>
                                         <!-- Payment Status Selector -->
                                         <select class="form-select select-payment rounded-pill py-1.5 px-3 fs-7 border" 
-                                                data-order-id="<?php echo $order['id']; ?>" 
-                                                onchange="updatePaymentStatus(<?php echo $order['id']; ?>, this)">
+                                                data-order-id="<?php echo $orderId; ?>" 
+                                                onchange="updatePaymentStatus(<?php echo $orderId; ?>, this)">
                                             <option value="unpaid" <?php echo $order['payment_status'] === 'unpaid' ? 'selected' : ''; ?>>Unpaid</option>
                                             <option value="paid" <?php echo $order['payment_status'] === 'paid' ? 'selected' : ''; ?>>Paid</option>
                                             <option value="failed" <?php echo $order['payment_status'] === 'failed' ? 'selected' : ''; ?>>Failed</option>
