@@ -1,24 +1,34 @@
 <?php
 // api/products.php
-require_once 'db.php';
+require_once 'helpers.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    sendJsonResponse(['success' => false, 'message' => 'Method not allowed.'], 405);
+}
+
+require_once 'db.php';
 
 try {
     // Fetch all products, sorted by category and then by id
     $stmt = $pdo->query("SELECT * FROM products ORDER BY category, id");
     $products = $stmt->fetchAll();
     
-    echo json_encode([
+    sendJsonResponse([
         'success' => true,
         'data' => $products
     ]);
 } catch (\PDOException $e) {
-    http_response_code(500);
-    echo json_encode([
+    sendJsonResponse([
         'success' => false,
         'message' => 'Failed to fetch products: ' . $e->getMessage()
-    ]);
+    ], 500);
 }
 ?>
