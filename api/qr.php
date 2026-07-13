@@ -4,20 +4,35 @@
 
 header('Content-Type: image/svg+xml; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('X-Content-Type-Options: nosniff');
+
+function renderQrError(string $message, int $statusCode = 400): void
+{
+    http_response_code($statusCode);
+    $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">'
+        . '<rect width="100%" height="100%" fill="#fff"/>'
+        . '<text x="12" y="32" font-family="Arial, sans-serif" font-size="16" fill="#111827">'
+        . $safeMessage
+        . '</text>'
+        . '</svg>';
+    exit;
+}
 
 $data = isset($_GET['data']) ? trim($_GET['data']) : '';
 $size = isset($_GET['size']) ? intval($_GET['size']) : 220;
 
 if ($data === '') {
-    http_response_code(400);
-    echo '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><text x="10" y="30">Missing QR data</text></svg>';
-    exit;
+    renderQrError('Missing QR data');
 }
 
 if (strlen($data) > 250) {
-    http_response_code(400);
-    echo '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><text x="10" y="30">QR data too long</text></svg>';
-    exit;
+    renderQrError('QR data too long');
+}
+
+if (preg_match('/[\x00-\x1F\x7F]/', $data)) {
+    renderQrError('QR data contains unsupported characters');
 }
 
 $size = max(120, min(800, $size));
@@ -26,8 +41,7 @@ try {
     $qr = new SimpleQrCode($data);
     echo $qr->toSvg($size);
 } catch (Exception $e) {
-    http_response_code(400);
-    echo '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><text x="10" y="30">QR error</text></svg>';
+    renderQrError('QR error');
 }
 
 class SimpleQrCode
