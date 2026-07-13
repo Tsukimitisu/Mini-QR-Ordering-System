@@ -1,25 +1,18 @@
 <?php
 // api/update_order_status.php
-require_once 'db.php';
+require_once 'helpers.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
-// Handle preflight CORS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
+requirePostMethod();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
-    exit;
-}
+require_once 'db.php';
 
 try {
-    $input = json_decode(file_get_contents('php://input'), true);
+    $input = readJsonRequestBody();
     
     $orderId = isset($input['order_id']) ? intval($input['order_id']) : 0;
     $orderStatus = isset($input['order_status']) ? trim($input['order_status']) : '';
@@ -28,8 +21,7 @@ try {
         throw new Exception("Invalid order ID.");
     }
     
-    $allowedStatuses = ['pending', 'preparing', 'completed', 'cancelled'];
-    if (!in_array($orderStatus, $allowedStatuses)) {
+    if (!in_array($orderStatus, allowedOrderStatuses(), true)) {
         throw new Exception("Invalid order status value.");
     }
     
@@ -44,15 +36,14 @@ try {
     $stmt = $pdo->prepare("UPDATE orders SET order_status = ? WHERE id = ?");
     $stmt->execute([$orderStatus, $orderId]);
     
-    echo json_encode([
+    sendJsonResponse([
         'success' => true,
         'message' => 'Order status updated successfully.'
     ]);
 } catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode([
+    sendJsonResponse([
         'success' => false,
         'message' => $e->getMessage()
-    ]);
+    ], 400);
 }
 ?>
