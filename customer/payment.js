@@ -1,15 +1,27 @@
 // customer/payment.js
 const PAYMENT_CURRENCY_SYMBOL = '\u20b1';
 
+function setPaymentActionState(isDisabled) {
+    document.querySelectorAll('#payment-processing button').forEach(button => {
+        button.disabled = isDisabled;
+    });
+}
+
 // Initialize the modal views
 function initPaymentScreen() {
     const processingSection = document.getElementById('payment-processing');
     const successSection = document.getElementById('payment-success');
     const failedSection = document.getElementById('payment-failed');
+    const processingHeader = document.querySelector('#payment-processing h4');
 
     processingSection.classList.remove('d-none');
     successSection.classList.add('d-none');
     failedSection.classList.add('d-none');
+
+    if (processingHeader) {
+        processingHeader.innerText = "Connecting to Gateway...";
+    }
+    setPaymentActionState(false);
 }
 
 // Simulate user decision
@@ -27,7 +39,10 @@ function simulatePayment(status) {
 
     // Show small loading states if needed
     const processingHeader = document.querySelector('#payment-processing h4');
-    processingHeader.innerText = "Authorizing Transaction...";
+    if (processingHeader) {
+        processingHeader.innerText = "Authorizing Transaction...";
+    }
+    setPaymentActionState(true);
 
     fetch('../api/update_payment_status.php', {
         method: 'POST',
