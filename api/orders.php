@@ -1,6 +1,6 @@
 <?php
 // api/orders.php
-require_once 'db.php';
+require_once 'helpers.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -14,10 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+require_once 'db.php';
+
 if ($method === 'GET') {
     // Admin request: fetch all orders (sorted newest first, with optional status filtering)
     try {
         $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : '';
+
+        if ($statusFilter !== '' && $statusFilter !== 'all' && !in_array($statusFilter, allowedOrderStatuses(), true)) {
+            sendJsonResponse([
+                'success' => false,
+                'message' => 'Invalid order status filter.'
+            ], 400);
+        }
         
         $sql = "SELECT * FROM orders";
         $params = [];
@@ -40,26 +49,20 @@ if ($method === 'GET') {
             $order['items'] = $itemStmt->fetchAll();
         }
         
-        echo json_encode([
+        sendJsonResponse([
             'success' => true,
             'data' => $orders
         ]);
     } catch (\PDOException $e) {
-        http_response_code(500);
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => 'Failed to fetch orders: ' . $e->getMessage()
-        ]);
+        ], 500);
     }
 } elseif ($method === 'POST') {
     // Customer request: submit a new order
     try {
-        // Read raw JSON input
-        $input = json_decode(file_get_contents('php://input'), true);
-        
-        if (!$input) {
-            throw new Exception("Invalid request payload. Content must be JSON.");
-        }
+        $input = readJsonRequestBody();
         
         $customerName = isset($input['customer_name']) ? htmlspecialchars(trim($input['customer_name'])) : '';
         $tableNumber = isset($input['table_number']) ? intval($input['table_number']) : 0;
@@ -173,7 +176,7 @@ if ($method === 'GET') {
         // Commit transaction
         $pdo->commit();
         
-        echo json_encode([
+        sendJsonResponse([
             'success' => true,
             'message' => 'Order placed successfully.',
             'order_id' => $orderId,
@@ -185,17 +188,15 @@ if ($method === 'GET') {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        http_response_code(400);
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => $e->getMessage()
-        ]);
+        ], 400);
     }
 } else {
-    http_response_code(405);
-    echo json_encode([
+    sendJsonResponse([
         'success' => false,
         'message' => 'Method not allowed.'
-    ]);
+    ], 405);
 }
 ?>
