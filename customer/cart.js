@@ -30,6 +30,15 @@ function formatCurrency(value) {
     return `${CART_CURRENCY_SYMBOL}${amount.toFixed(2)}`;
 }
 
+function buildOrderItemsPayload() {
+    return cart
+        .map(item => ({
+            product_id: parseInt(item.product_id, 10),
+            quantity: parseInt(item.quantity, 10)
+        }))
+        .filter(item => Number.isFinite(item.product_id) && item.product_id > 0 && Number.isFinite(item.quantity) && item.quantity > 0);
+}
+
 // Current order detail after placing it
 let currentOrder = {
     id: null,
@@ -210,8 +219,9 @@ function scrollToCart() {
 // Submit Order to PHP Backend
 function submitOrder(event) {
     event.preventDefault();
+    const orderItems = buildOrderItemsPayload();
     
-    if (cart.length === 0) {
+    if (orderItems.length === 0) {
         alert("Your cart is empty. Add some delicious food first!");
         return;
     }
@@ -232,10 +242,7 @@ function submitOrder(event) {
     const payload = {
         customer_name: customerName,
         table_number: tableNumber,
-        items: cart.map(item => ({
-            product_id: item.product_id,
-            quantity: item.quantity
-        }))
+        items: orderItems
     };
     
     const submitBtn = document.querySelector('.checkout-submit-btn');
