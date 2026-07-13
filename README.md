@@ -48,6 +48,9 @@ Developed by James Andrei N Revilla
 - Admin order status update
 - Admin payment status update
 - Product stock validation during checkout
+- Customer name, table number, quantity, and menu input validation
+- Invalid cart storage recovery
+- Safer JSON API response handling
 - Peso currency display
 - Mock payment success and failure flow
 
@@ -61,6 +64,7 @@ Mini-Ordering-System
 |   `-- qr_generator.php
 |-- api
 |   |-- db.php
+|   |-- helpers.php
 |   |-- orders.php
 |   |-- products.php
 |   |-- qr.php
@@ -168,6 +172,12 @@ Product records include price, image, category, availability, and stock quantity
 
 ## API Endpoints
 
+Shared API validation and JSON response helpers are defined in:
+
+```text
+api/helpers.php
+```
+
 ### GET Products
 
 ```text
@@ -191,6 +201,13 @@ api/orders.php
 ```
 
 Creates a new customer order.
+
+Validation rules:
+
+- customer_name is required and must be 80 characters or fewer
+- table_number must be from 1 to 999
+- item quantity must be from 1 to 99 per product
+- product stock and availability are rechecked in the database before checkout
 
 Example request:
 
@@ -340,6 +357,6 @@ Interview preparation notes are separated into:
 INTERVIEW_READINESS.md
 ```
 
-## GitHub Note
+## Maintenance Notes
 
-No GitHub push command has been run for this documentation update.
+Use focused commits for validation, API, UI, and documentation changes so the project history stays easy to review.
