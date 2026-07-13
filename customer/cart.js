@@ -4,6 +4,21 @@
 let cart = JSON.parse(localStorage.getItem('restaurant_cart')) || [];
 const CART_CURRENCY_SYMBOL = '\u20b1';
 
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    }[char]));
+}
+
+function formatCurrency(value) {
+    const amount = Number(value) || 0;
+    return `${CART_CURRENCY_SYMBOL}${amount.toFixed(2)}`;
+}
+
 // Current order detail after placing it
 let currentOrder = {
     id: null,
@@ -125,26 +140,36 @@ function renderCart() {
     } else {
         let html = '';
         cart.forEach(item => {
-            const subtotal = item.price * item.quantity;
-            totalItems += item.quantity;
+            const productId = parseInt(item.product_id, 10);
+            const quantity = parseInt(item.quantity, 10) || 0;
+            const price = Number(item.price) || 0;
+
+            if (!Number.isFinite(productId) || quantity <= 0) {
+                return;
+            }
+
+            const productName = escapeHtml(item.product_name);
+            const image = escapeHtml(item.image);
+            const subtotal = price * quantity;
+            totalItems += quantity;
             totalPrice += subtotal;
             
             html += `
                 <div class="cart-item d-flex align-items-center mb-3 p-2 rounded-3">
-                    <img src="${item.image}" alt="${item.product_name}" class="cart-item-img rounded-3 me-3" loading="lazy" decoding="async">
+                    <img src="${image}" alt="${productName}" class="cart-item-img rounded-3 me-3" loading="lazy" decoding="async">
                     <div class="flex-grow-1">
-                        <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${item.product_name}</h6>
-                        <span class="text-primary fw-semibold fs-7">${CART_CURRENCY_SYMBOL}${item.price.toFixed(2)}</span>
+                        <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${productName}</h6>
+                        <span class="text-primary fw-semibold fs-7">${formatCurrency(price)}</span>
                     </div>
                     <div class="cart-controls d-flex align-items-center gap-2">
-                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, -1)" aria-label="Decrease ${item.product_name} quantity">
+                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${productId}, -1)" aria-label="Decrease ${productName} quantity">
                             <i class="bi bi-minus-lg fs-8 text-dark"></i>
                         </button>
-                        <span class="cart-quantity fw-bold text-dark px-1 fs-7">${item.quantity}</span>
-                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, 1)" aria-label="Increase ${item.product_name} quantity">
+                        <span class="cart-quantity fw-bold text-dark px-1 fs-7">${quantity}</span>
+                        <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${productId}, 1)" aria-label="Increase ${productName} quantity">
                             <i class="bi bi-plus-lg fs-8 text-dark"></i>
                         </button>
-                        <button class="btn btn-sm text-danger-custom ms-2 p-1 bg-transparent border-0" onclick="removeFromCart(${item.product_id})" aria-label="Remove ${item.product_name} from cart">
+                        <button class="btn btn-sm text-danger-custom ms-2 p-1 bg-transparent border-0" onclick="removeFromCart(${productId})" aria-label="Remove ${productName} from cart">
                             <i class="bi bi-trash3-fill"></i>
                         </button>
                     </div>
@@ -156,10 +181,10 @@ function renderCart() {
     
     // Update numeric values
     countBadge.innerText = totalItems;
-    subtotalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
-    totalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
+    subtotalText.innerText = formatCurrency(totalPrice);
+    totalText.innerText = formatCurrency(totalPrice);
     if (mobileTotalText) {
-        mobileTotalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
+        mobileTotalText.innerText = formatCurrency(totalPrice);
     }
 }
 
