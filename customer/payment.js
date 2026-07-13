@@ -1,4 +1,5 @@
 // customer/payment.js
+const PAYMENT_CURRENCY_SYMBOL = '\u20b1';
 
 // Initialize the modal views
 function initPaymentScreen() {
@@ -44,7 +45,7 @@ function simulatePayment(status) {
                 // Populate Success Information
                 document.getElementById('success-table-number').innerText = currentOrder.table;
                 document.getElementById('success-order-ref').innerText = '#' + currentOrder.id;
-                document.getElementById('success-order-amount').innerText = '₱' + parseFloat(currentOrder.total).toFixed(2);
+                document.getElementById('success-order-amount').innerText = PAYMENT_CURRENCY_SYMBOL + parseFloat(currentOrder.total).toFixed(2);
                 
                 // Show success screen
                 document.getElementById('payment-success').classList.remove('d-none');

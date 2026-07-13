@@ -328,7 +328,7 @@ try {
                                                 </span>
                                             </td>
                                             <td class="fw-bold text-primary">
-                                                ₱<?php echo number_format($product['price'], 2); ?>
+                                                &#8369;<?php echo number_format($product['price'], 2); ?>
                                             </td>
                                             <td>
                                                 <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7 inventory-stock-input" name="stock_quantity" min="0" value="<?php echo $stockQuantity; ?>">

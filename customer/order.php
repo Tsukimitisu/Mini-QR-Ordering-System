@@ -108,7 +108,7 @@ try {
                                                     </div>
                                                 <?php endif; ?>
                                                 <span class="price-tag shadow-sm fw-semibold px-3 py-1 rounded-pill">
-                                                    ₱<?php echo number_format($item['price'], 2); ?>
+                                                    &#8369;<?php echo number_format($item['price'], 2); ?>
                                                 </span>
                                             </div>
                                             <div class="card-body d-flex flex-column p-4">
@@ -161,16 +161,16 @@ try {
                     <div class="totals-section border-top pt-3 mb-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Subtotal</span>
-                            <span class="fw-semibold text-dark" id="cart-subtotal" aria-live="polite">₱0.00</span>
+                            <span class="fw-semibold text-dark" id="cart-subtotal" aria-live="polite">&#8369;0.00</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Service Tax (0%)</span>
-                            <span class="text-dark">₱0.00</span>
+                            <span class="text-dark">&#8369;0.00</span>
                         </div>
                         <hr class="my-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="fw-bold text-dark">Total Amount</span>
-                            <span class="fw-bold text-primary fs-4" id="cart-total" aria-live="polite">₱0.00</span>
+                            <span class="fw-bold text-primary fs-4" id="cart-total" aria-live="polite">&#8369;0.00</span>
                         </div>
                     </div>
 
@@ -203,7 +203,7 @@ try {
     <div class="mobile-cart-sticky-bar d-lg-none fixed-bottom p-3 border-top shadow-sm">
         <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold d-flex justify-content-between align-items-center" onclick="scrollToCart()">
             <span><i class="bi bi-cart-fill me-2"></i> View Cart & Checkout</span>
-            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total" aria-live="polite">₱0.00</span>
+            <span class="bg-white text-primary px-3 py-1 rounded-pill fs-7" id="mobile-cart-total" aria-live="polite">&#8369;0.00</span>
         </button>
     </div>
 
@@ -248,7 +248,7 @@ try {
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted fs-7">Amount Paid:</span>
-                                <span class="fw-bold text-primary fs-7" id="success-order-amount">₱0.00</span>
+                                <span class="fw-bold text-primary fs-7" id="success-order-amount">&#8369;0.00</span>
                             </div>
                         </div>
                         <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold" onclick="resetSystem()">

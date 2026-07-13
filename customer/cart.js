@@ -2,6 +2,7 @@
 
 // Initialize cart from localStorage or empty array
 let cart = JSON.parse(localStorage.getItem('restaurant_cart')) || [];
+const CART_CURRENCY_SYMBOL = '\u20b1';
 
 // Current order detail after placing it
 let currentOrder = {
@@ -133,7 +134,7 @@ function renderCart() {
                     <img src="${item.image}" alt="${item.product_name}" class="cart-item-img rounded-3 me-3" loading="lazy" decoding="async">
                     <div class="flex-grow-1">
                         <h6 class="mb-0 fw-bold text-dark fs-7 text-truncate" style="max-width: 140px;">${item.product_name}</h6>
-                        <span class="text-primary fw-semibold fs-7">₱${item.price.toFixed(2)}</span>
+                        <span class="text-primary fw-semibold fs-7">${CART_CURRENCY_SYMBOL}${item.price.toFixed(2)}</span>
                     </div>
                     <div class="cart-controls d-flex align-items-center gap-2">
                         <button class="btn btn-sm btn-dark-control p-1 d-flex align-items-center justify-content-center rounded-circle" onclick="updateQuantity(${item.product_id}, -1)" aria-label="Decrease ${item.product_name} quantity">
@@ -155,10 +156,10 @@ function renderCart() {
     
     // Update numeric values
     countBadge.innerText = totalItems;
-    subtotalText.innerText = `₱${totalPrice.toFixed(2)}`;
-    totalText.innerText = `₱${totalPrice.toFixed(2)}`;
+    subtotalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
+    totalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
     if (mobileTotalText) {
-        mobileTotalText.innerText = `₱${totalPrice.toFixed(2)}`;
+        mobileTotalText.innerText = `${CART_CURRENCY_SYMBOL}${totalPrice.toFixed(2)}`;
     }
 }
 
