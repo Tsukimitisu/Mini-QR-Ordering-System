@@ -1,5 +1,6 @@
 <?php
 // admin/dashboard.php
+require_once '../api/helpers.php';
 require_once '../api/db.php';
 
 // Fetch Statistics
@@ -26,6 +27,10 @@ try {
 
 // Fetch Filter status
 $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : 'all';
+if ($statusFilter !== 'all' && !in_array($statusFilter, allowedOrderStatuses(), true)) {
+    $statusFilter = 'all';
+    $filterWarning = 'Invalid status filter ignored.';
+}
 
 // Fetch Orders
 try {
@@ -178,6 +183,12 @@ try {
                     <a href="?status=cancelled" class="btn btn-filter text-nowrap rounded-pill px-3 fs-7 <?php echo $statusFilter === 'cancelled' ? 'active' : ''; ?>">Cancelled</a>
                 </div>
             </div>
+
+            <?php if (isset($filterWarning)): ?>
+                <div class="alert alert-warning rounded-3" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i><?php echo htmlspecialchars($filterWarning); ?>
+                </div>
+            <?php endif; ?>
 
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger rounded-3" role="alert">
