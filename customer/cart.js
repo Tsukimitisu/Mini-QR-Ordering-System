@@ -1,7 +1,18 @@
 // customer/cart.js
 
+function loadCartFromStorage() {
+    try {
+        const storedCart = JSON.parse(localStorage.getItem('restaurant_cart'));
+        return Array.isArray(storedCart) ? storedCart : [];
+    } catch (error) {
+        console.warn('Invalid cart data cleared from localStorage.', error);
+        localStorage.removeItem('restaurant_cart');
+        return [];
+    }
+}
+
 // Initialize cart from localStorage or empty array
-let cart = JSON.parse(localStorage.getItem('restaurant_cart')) || [];
+let cart = loadCartFromStorage();
 const CART_CURRENCY_SYMBOL = '\u20b1';
 
 function escapeHtml(value) {
