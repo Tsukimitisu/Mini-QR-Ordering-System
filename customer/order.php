@@ -74,7 +74,8 @@ try {
                 <div class="category-nav d-flex gap-2 overflow-auto pb-3 mb-4 scrollbar-none" aria-label="Menu categories">
                     <button type="button" class="btn btn-category active text-nowrap rounded-pill px-4" onclick="filterCategory('all')">All Menu</button>
                     <?php foreach (array_keys($menu) as $cat): ?>
-                        <button type="button" class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory(<?php echo json_encode($cat, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>)">
+                        <?php $categoryJson = htmlspecialchars(json_encode($cat, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8'); ?>
+                        <button type="button" class="btn btn-category text-nowrap rounded-pill px-4" onclick="filterCategory(<?php echo $categoryJson; ?>)">
                             <?php echo htmlspecialchars($cat); ?>
                         </button>
                     <?php endforeach; ?>
@@ -97,8 +98,8 @@ try {
                                 <?php foreach ($items as $item): 
                                     $productId = intval($item['id']);
                                     $productPrice = number_format((float) $item['price'], 2, '.', '');
-                                    $productNameJson = json_encode($item['product_name'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-                                    $productImageJson = json_encode('../assets/images/' . $item['image'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+                                    $productNameJson = htmlspecialchars(json_encode($item['product_name'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                                    $productImageJson = htmlspecialchars(json_encode('../assets/images/' . $item['image'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
                                     $stockQuantity = isset($item['stock_quantity']) ? intval($item['stock_quantity']) : 0;
                                     $isAvailable = intval($item['availability_status']) === 1 && $stockQuantity > 0;
                                 ?>
