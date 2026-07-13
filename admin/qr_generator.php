@@ -2,7 +2,10 @@
 // admin/qr_generator.php
 // Determine the base URL dynamically so that the QR code automatically works on the current network IP / host
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'];
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+if (!preg_match('/^[a-z0-9.-]+(?::[0-9]{1,5})?$/i', $host)) {
+    $host = 'localhost';
+}
 $baseDir = str_replace('/admin', '/customer/order.php', dirname($_SERVER['PHP_SELF']));
 $customerUrlPattern = $protocol . $host . $baseDir;
 ?>
@@ -128,7 +131,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
                         <label for="tableInput" class="form-label text-muted fs-7">Table Number</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted border"><i class="bi bi-tag-fill text-primary"></i></span>
-                            <input type="number" class="form-control bg-light border text-dark" id="tableInput" value="1" min="1">
+                            <input type="number" class="form-control bg-light border text-dark" id="tableInput" value="1" min="1" max="999">
                         </div>
                         <small class="text-secondary fs-8 mt-1 d-block">Set the table number, then confirm to generate the final QR code.</small>
                     </div>
@@ -192,6 +195,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
     <!-- Script to manage dynamic QR rendering -->
     <script>
         let confirmedTableNumber = null;
+        const MAX_QR_TABLE_NUMBER = 999;
 
         document.addEventListener('DOMContentLoaded', () => {
             showQrPlaceholder();
@@ -217,7 +221,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
             const tableNumInput = document.getElementById('tableInput');
             let tableNum = parseInt(tableNumInput.value);
 
-            if (isNaN(tableNum) || tableNum <= 0) {
+            if (isNaN(tableNum) || tableNum <= 0 || tableNum > MAX_QR_TABLE_NUMBER) {
                 return null;
             }
 
@@ -228,7 +232,7 @@ $customerUrlPattern = $protocol . $host . $baseDir;
             const tableNum = getRequestedTableNumber();
 
             if (!tableNum) {
-                alert("Please enter a valid table number before generating the QR code.");
+                alert("Please enter a table number from 1 to " + MAX_QR_TABLE_NUMBER + " before generating the QR code.");
                 return;
             }
 
