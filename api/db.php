@@ -23,13 +23,16 @@ try {
          $pdo->exec("UPDATE products SET stock_quantity = 0 WHERE availability_status = 0");
      }
 } catch (\PDOException $e) {
+     error_log('Database connection failed: ' . $e->getMessage());
+
      // Return JSON error response if connection fails
      header('Content-Type: application/json');
+     header('X-Content-Type-Options: nosniff');
      http_response_code(500);
      echo json_encode([
          'success' => false,
-         'message' => 'Database connection failed: ' . $e->getMessage()
-     ]);
+         'message' => 'Database connection failed. Please check the server configuration.'
+     ], JSON_UNESCAPED_SLASHES);
      exit;
 }
 ?>
