@@ -4,6 +4,12 @@ require_once '../api/db.php';
 
 $errors = [];
 $successMessage = '';
+$maxProductNameLength = 120;
+$maxCategoryLength = 80;
+$maxDescriptionLength = 500;
+$maxStockQuantity = 9999;
+$maxProductPrice = 99999.99;
+
 if (isset($_GET['added'])) {
     $successMessage = 'Menu item added successfully.';
 } elseif (isset($_GET['updated'])) {
@@ -29,6 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stockQuantity < 0) {
             $errors[] = 'Stock cannot be negative.';
+        }
+
+        if ($stockQuantity > $maxStockQuantity) {
+            $errors[] = 'Stock cannot exceed ' . $maxStockQuantity . '.';
         }
 
         if (!in_array($availabilityStatus, [0, 1], true)) {
@@ -63,12 +73,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Product name is required.';
     }
 
+    if (strlen($productName) > $maxProductNameLength) {
+        $errors[] = 'Product name must be ' . $maxProductNameLength . ' characters or fewer.';
+    }
+
+    if (strlen($description) > $maxDescriptionLength) {
+        $errors[] = 'Description must be ' . $maxDescriptionLength . ' characters or fewer.';
+    }
+
     if ($category === '') {
         $errors[] = 'Category is required.';
     }
 
+    if (strlen($category) > $maxCategoryLength) {
+        $errors[] = 'Category must be ' . $maxCategoryLength . ' characters or fewer.';
+    }
+
     if (!is_numeric($price) || floatval($price) <= 0) {
         $errors[] = 'Price must be greater than 0.';
+    }
+
+    if (is_numeric($price) && floatval($price) > $maxProductPrice) {
+        $errors[] = 'Price cannot exceed ' . number_format($maxProductPrice, 2, '.', '') . '.';
     }
 
     if (!in_array($availabilityStatus, [0, 1], true)) {
@@ -77,6 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stockQuantity < 0) {
         $errors[] = 'Stock cannot be negative.';
+    }
+
+    if ($stockQuantity > $maxStockQuantity) {
+        $errors[] = 'Stock cannot exceed ' . $maxStockQuantity . '.';
     }
 
     if ($stockQuantity === 0) {
@@ -229,27 +259,27 @@ try {
                         <input type="hidden" name="form_action" value="add_product">
                         <div class="mb-3">
                             <label for="product_name" class="form-label text-muted fs-7">Product Name</label>
-                            <input type="text" class="form-control bg-light border text-dark" id="product_name" name="product_name" required>
+                            <input type="text" class="form-control bg-light border text-dark" id="product_name" name="product_name" maxlength="<?php echo $maxProductNameLength; ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="description" class="form-label text-muted fs-7">Description</label>
-                            <textarea class="form-control bg-light border text-dark" id="description" name="description" rows="4"></textarea>
+                            <textarea class="form-control bg-light border text-dark" id="description" name="description" rows="4" maxlength="<?php echo $maxDescriptionLength; ?>"></textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="price" class="form-label text-muted fs-7">Price</label>
-                            <input type="number" class="form-control bg-light border text-dark" id="price" name="price" min="0.01" step="0.01" required>
+                            <input type="number" class="form-control bg-light border text-dark" id="price" name="price" min="0.01" max="<?php echo $maxProductPrice; ?>" step="0.01" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="stock_quantity" class="form-label text-muted fs-7">Stock Quantity</label>
-                            <input type="number" class="form-control bg-light border text-dark" id="stock_quantity" name="stock_quantity" min="0" value="10" required>
+                            <input type="number" class="form-control bg-light border text-dark" id="stock_quantity" name="stock_quantity" min="0" max="<?php echo $maxStockQuantity; ?>" value="10" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="category" class="form-label text-muted fs-7">Category</label>
-                            <input type="text" class="form-control bg-light border text-dark" id="category" name="category" list="categoryOptions" required>
+                            <input type="text" class="form-control bg-light border text-dark" id="category" name="category" list="categoryOptions" maxlength="<?php echo $maxCategoryLength; ?>" required>
                             <datalist id="categoryOptions">
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?php echo htmlspecialchars($cat); ?>"></option>
@@ -331,7 +361,7 @@ try {
                                                 &#8369;<?php echo number_format($product['price'], 2); ?>
                                             </td>
                                             <td>
-                                                <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7 inventory-stock-input" name="stock_quantity" min="0" value="<?php echo $stockQuantity; ?>">
+                                                <input form="<?php echo $inventoryFormId; ?>" type="number" class="form-control bg-light border text-dark fs-7 inventory-stock-input" name="stock_quantity" min="0" max="<?php echo $maxStockQuantity; ?>" value="<?php echo $stockQuantity; ?>">
                                             </td>
                                             <td>
                                                 <select form="<?php echo $inventoryFormId; ?>" class="form-select bg-light border text-dark fs-7 inventory-availability-select" name="availability_status">
