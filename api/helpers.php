@@ -1,6 +1,13 @@
 <?php
 // api/helpers.php
 
+function sendCorsHeaders(string $allowedMethods): void
+{
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('Access-Control-Allow-Methods: ' . $allowedMethods);
+}
+
 function sendJsonResponse(array $payload, int $statusCode = 200): void
 {
     header('Content-Type: application/json; charset=utf-8');
