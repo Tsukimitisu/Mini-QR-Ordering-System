@@ -342,7 +342,7 @@ try {
             const apiUrl = '../api/orders.php?status=' + encodeURIComponent(dashboardStatusFilter);
 
             fetch(apiUrl, { cache: 'no-store' })
-                .then(res => res.json())
+                .then(readDashboardJson)
                 .then(data => {
                     if (!data.success) {
                         return;
@@ -361,6 +361,13 @@ try {
                 });
         }
 
+        function readDashboardJson(response) {
+            return response.json().catch(() => ({
+                success: false,
+                message: 'Invalid server response.'
+            }));
+        }
+
         function updateOrderStatus(orderId, selectEl) {
             const status = selectEl.value;
             selectEl.disabled = true;
@@ -376,7 +383,7 @@ try {
                     order_status: status
                 })
             })
-            .then(res => res.json())
+            .then(readDashboardJson)
             .then(data => {
                 selectEl.disabled = false;
                 if (data.success) {
@@ -418,7 +425,7 @@ try {
                     payment_result: result
                 })
             })
-            .then(res => res.json())
+            .then(readDashboardJson)
             .then(data => {
                 selectEl.disabled = false;
                 if (data.success) {
