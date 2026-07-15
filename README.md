@@ -80,9 +80,21 @@ Mini-Ordering-System
 |   `-- payment.js
 |-- database
 |   `-- mini_qr_ordering_db.sql
+|-- docs
+|   |-- API_REFERENCE.md
+|   |-- LOCAL_SETUP.md
+|   `-- TESTING_CHECKLIST.md
 |-- index.php
 `-- README.md
 ```
+
+## Project Documentation
+
+- Local setup: `docs/LOCAL_SETUP.md`
+- API reference: `docs/API_REFERENCE.md`
+- Manual testing checklist: `docs/TESTING_CHECKLIST.md`
+- Security notes: `SECURITY.md`
+- Contribution guide: `CONTRIBUTING.md`
 
 ## Installation Guide
 
