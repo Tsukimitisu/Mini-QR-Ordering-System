@@ -3,6 +3,8 @@
 
 function sendJsonResponse(array $payload, int $statusCode = 200): void
 {
+    header('Content-Type: application/json; charset=utf-8');
+    header('X-Content-Type-Options: nosniff');
     http_response_code($statusCode);
     echo json_encode($payload, JSON_UNESCAPED_SLASHES);
     exit;
