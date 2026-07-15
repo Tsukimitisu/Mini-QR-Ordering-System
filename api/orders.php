@@ -4,6 +4,7 @@ require_once 'helpers.php';
 
 header('Content-Type: application/json');
 sendCorsHeaders('GET, POST, OPTIONS');
+sendNoStoreHeaders();
 
 // Handle preflight CORS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

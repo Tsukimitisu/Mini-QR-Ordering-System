@@ -8,6 +8,12 @@ function sendCorsHeaders(string $allowedMethods): void
     header('Access-Control-Allow-Methods: ' . $allowedMethods);
 }
 
+function sendNoStoreHeaders(): void
+{
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+}
+
 function sendJsonResponse(array $payload, int $statusCode = 200): void
 {
     header('Content-Type: application/json; charset=utf-8');

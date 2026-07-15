@@ -4,6 +4,7 @@ require_once 'helpers.php';
 
 header('Content-Type: application/json');
 sendCorsHeaders('GET, OPTIONS');
+sendNoStoreHeaders();
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
