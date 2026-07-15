@@ -1,9 +1,16 @@
 <?php
 // customer/order.php
+require_once '../api/helpers.php';
 require_once '../api/db.php';
 
 // Get table number from URL query parameter
-$tableNumber = isset($_GET['table']) ? intval($_GET['table']) : '';
+$tableNumber = '';
+if (isset($_GET['table'])) {
+    $requestedTableNumber = intval($_GET['table']);
+    if ($requestedTableNumber > 0 && $requestedTableNumber <= maxTableNumber()) {
+        $tableNumber = $requestedTableNumber;
+    }
+}
 
 // Fetch products from database
 try {
