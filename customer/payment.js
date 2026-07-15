@@ -51,7 +51,7 @@ function simulatePayment(status) {
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(parseJsonResponse)
     .then(result => {
         if (result.status === 200 && result.body.success) {
             document.getElementById('payment-processing').classList.add('d-none');

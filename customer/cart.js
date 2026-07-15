@@ -32,6 +32,18 @@ function formatCurrency(value) {
     return `${CART_CURRENCY_SYMBOL}${amount.toFixed(2)}`;
 }
 
+function parseJsonResponse(response) {
+    return response.json()
+        .catch(() => ({
+            success: false,
+            message: 'Invalid server response.'
+        }))
+        .then(data => ({
+            status: response.status,
+            body: data
+        }));
+}
+
 function buildOrderItemsPayload() {
     return cart
         .map(item => ({
@@ -263,7 +275,7 @@ function submitOrder(event) {
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(parseJsonResponse)
     .then(result => {
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<i class="bi bi-send-fill me-2"></i> Place Order`;
