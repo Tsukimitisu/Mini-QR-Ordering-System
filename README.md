@@ -92,7 +92,11 @@ Mini-Ordering-System
 
 - Local setup: `docs/LOCAL_SETUP.md`
 - API reference: `docs/API_REFERENCE.md`
+- Database schema: `docs/DATABASE_SCHEMA.md`
+- User flows: `docs/USER_FLOWS.md`
 - Manual testing checklist: `docs/TESTING_CHECKLIST.md`
+- Deployment notes: `docs/DEPLOYMENT_NOTES.md`
+- Troubleshooting: `docs/TROUBLESHOOTING.md`
 - Security notes: `SECURITY.md`
 - Contribution guide: `CONTRIBUTING.md`
 
