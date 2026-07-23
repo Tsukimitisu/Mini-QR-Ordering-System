@@ -6,12 +6,14 @@ $db   = 'mini_qr_ordering_db';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
+$timeout = 10; // seconds
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_TIMEOUT            => $timeout,
 ];
 
 try {
@@ -21,6 +23,7 @@ try {
      if (!$columnStmt->fetch()) {
          $pdo->exec("ALTER TABLE products ADD COLUMN stock_quantity INT NOT NULL DEFAULT 20 COMMENT 'Available stock count' AFTER availability_status");
          $pdo->exec("UPDATE products SET stock_quantity = 0 WHERE availability_status = 0");
+         error_log('Database: stock_quantity column added to products table');
      }
 } catch (\PDOException $e) {
      error_log('Database connection failed: ' . $e->getMessage());
