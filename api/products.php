@@ -26,9 +26,11 @@ try {
         'data' => $products
     ]);
 } catch (\PDOException $e) {
+    // Log the actual error internally but don't expose database details to client
+    error_log('Database error in products.php: ' . $e->getMessage());
     sendJsonResponse([
         'success' => false,
-        'message' => 'Failed to fetch products: ' . $e->getMessage()
+        'message' => 'Failed to fetch products. Please try again later.'
     ], 500);
 }
 ?>
