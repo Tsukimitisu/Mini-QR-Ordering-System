@@ -30,18 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $availabilityStatus = isset($_POST['availability_status']) ? intval($_POST['availability_status']) : 1;
 
         if ($productId <= 0) {
+            error_log("Inventory update failed: Invalid product ID ($productId)");
             $errors[] = 'Invalid product selected.';
         }
 
         if ($stockQuantity < 0) {
+            error_log("Inventory update failed: Negative stock ($stockQuantity) for product $productId");
             $errors[] = 'Stock cannot be negative.';
         }
 
         if ($stockQuantity > $maxStockQuantity) {
+            error_log("Inventory update failed: Stock exceeds max ($stockQuantity > $maxStockQuantity)");
             $errors[] = 'Stock cannot exceed ' . $maxStockQuantity . '.';
         }
 
         if (!in_array($availabilityStatus, [0, 1], true)) {
+            error_log("Inventory update failed: Invalid availability status ($availabilityStatus)");
             $errors[] = 'Invalid availability status.';
         }
 
@@ -53,10 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $pdo->prepare("UPDATE products SET stock_quantity = ?, availability_status = ? WHERE id = ?");
                 $stmt->execute([$stockQuantity, $availabilityStatus, $productId]);
+                
+                error_log("Inventory updated: Product ID $productId - Stock: $stockQuantity, Availability: $availabilityStatus");
 
                 header('Location: menu.php?updated=1');
                 exit;
             } catch (Exception $e) {
+                error_log("Inventory update exception: " . $e->getMessage());
                 $errors[] = 'Failed to update menu item: ' . $e->getMessage();
             }
         }
