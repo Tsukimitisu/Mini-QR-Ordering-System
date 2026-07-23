@@ -25,6 +25,14 @@ try {
          $pdo->exec("UPDATE products SET stock_quantity = 0 WHERE availability_status = 0");
          error_log('Database: stock_quantity column added to products table');
      }
+     
+     // Verify recommended indexes exist for optimal performance
+     // Recommended indexes:
+     // - CREATE INDEX idx_orders_status ON orders(order_status);
+     // - CREATE INDEX idx_orders_payment_status ON orders(payment_status);
+     // - CREATE INDEX idx_orders_created ON orders(created_at DESC);
+     // - CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+     // - CREATE INDEX idx_products_category ON products(category);
 } catch (\PDOException $e) {
      error_log('Database connection failed: ' . $e->getMessage());
 
