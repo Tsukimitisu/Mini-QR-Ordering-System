@@ -36,6 +36,20 @@ function sendJsonResponse(array $payload, int $statusCode = 200): void
     exit;
 }
 
+/**
+ * Validate JSON request body size to prevent DOS attacks
+ * @throws InvalidArgumentException if body size exceeds limit
+ */
+function validateRequestBodySize(): void
+{
+    $contentLength = isset($_SERVER['CONTENT_LENGTH']) ? intval($_SERVER['CONTENT_LENGTH']) : 0;
+    $maxSize = MAX_JSON_BODY_SIZE;
+    
+    if ($contentLength > $maxSize) {
+        throw new InvalidArgumentException('Request body exceeds maximum allowed size of ' . ($maxSize / 1024 / 1024) . 'MB');
+    }
+}
+
 function readJsonRequestBody(): array
 {
     $rawInput = file_get_contents('php://input');
