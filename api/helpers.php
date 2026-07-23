@@ -23,6 +23,8 @@ function sendNoStoreHeaders(): void
 {
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('Pragma: no-cache');
+    header('Content-Encoding: gzip');
+    header('Vary: Accept-Encoding');
 }
 
 function sendJsonResponse(array $payload, int $statusCode = 200): void
