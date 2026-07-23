@@ -86,4 +86,16 @@ function maxOrderItemQuantity(): int
 {
     return 99;
 }
+
+/**
+ * Sanitize user input by trimming and removing null bytes
+ * @param string $input The input string to sanitize
+ * @return string The sanitized string
+ */
+function sanitizeInput(string $input): string
+{
+    $sanitized = trim($input);
+    $sanitized = str_replace("\x00", '', $sanitized);
+    return $sanitized;
+}
 ?>
