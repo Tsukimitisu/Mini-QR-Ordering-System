@@ -1,26 +1,42 @@
 <?php
 // admin/dashboard.php
+/**
+ * Admin Dashboard - Displays order statistics and order management interface
+ * Provides metrics for total orders, pending orders, paid orders, and total sales
+ */
 require_once '../api/helpers.php';
 require_once '../api/db.php';
 
-// Fetch Statistics
+// Initialize variables
+$totalOrders = 0;
+$pendingOrders = 0;
+$paidOrders = 0;
+$totalSales = 0.00;
+$error = '';
+$filterWarning = '';
+
+// Fetch Statistics - using optimized combined query for better performance
 try {
-    // 1. Total Orders
-    $stmtTotal = $pdo->query("SELECT COUNT(*) as total FROM orders");
-    $totalOrders = $stmtTotal->fetch()['total'];
-
-    // 2. Pending Orders
-    $stmtPending = $pdo->query("SELECT COUNT(*) as total FROM orders WHERE order_status = 'pending'");
-    $pendingOrders = $stmtPending->fetch()['total'];
-
-    // 3. Paid Orders
-    $stmtPaid = $pdo->query("SELECT COUNT(*) as total FROM orders WHERE payment_status = 'paid'");
-    $paidOrders = $stmtPaid->fetch()['total'];
-
-    // 4. Total Sales
-    $stmtSales = $pdo->query("SELECT SUM(total_amount) as total FROM orders WHERE payment_status = 'paid'");
-    $totalSales = floatval($stmtSales->fetch()['total'] ?? 0.00);
+    $statsQuery = <<<SQL
+        SELECT 
+            COUNT(*) as total_count,
+            SUM(CASE WHEN order_status = 'pending' THEN 1 ELSE 0 END) as pending_count,
+            SUM(CASE WHEN payment_status = 'paid' THEN 1 ELSE 0 END) as paid_count,
+            COALESCE(SUM(CASE WHEN payment_status = 'paid' THEN total_amount ELSE 0 END), 0) as total_sales
+        FROM orders
+    SQL;
+    
+    $statsStmt = $pdo->query($statsQuery);
+    $stats = $statsStmt->fetch();
+    
+    $totalOrders = intval($stats['total_count'] ?? 0);
+    $pendingOrders = intval($stats['pending_count'] ?? 0);
+    $paidOrders = intval($stats['paid_count'] ?? 0);
+    $totalSales = floatval($stats['total_sales'] ?? 0.00);
+    
+    error_log("Dashboard stats loaded: Total=$totalOrders, Pending=$pendingOrders, Paid=$paidOrders");
 } catch (\PDOException $e) {
+    error_log("Dashboard stats error: " . $e->getMessage());
     $totalOrders = $pendingOrders = $paidOrders = 0;
     $totalSales = 0.00;
 }
@@ -32,7 +48,7 @@ if ($statusFilter !== 'all' && !in_array($statusFilter, allowedOrderStatuses(), 
     $filterWarning = 'Invalid status filter ignored.';
 }
 
-// Fetch Orders
+// Fetch Orders with optional filtering
 try {
     $sql = "SELECT * FROM orders";
     $params = [];
@@ -48,15 +64,18 @@ try {
     $stmt->execute($params);
     $orders = $stmt->fetchAll();
     
-    // Attach items to each order
+    // Attach items to each order for complete order data
     foreach ($orders as &$order) {
         $itemStmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ? ORDER BY id ASC");
         $itemStmt->execute([$order['id']]);
         $order['items'] = $itemStmt->fetchAll();
     }
+    
+    error_log("Dashboard orders loaded: " . count($orders) . " orders fetched" . ($statusFilter !== 'all' ? " with status '$statusFilter'" : ""));
 } catch (\PDOException $e) {
+    error_log("Dashboard orders fetch error: " . $e->getMessage());
     $orders = [];
-    $error = "Failed to load orders: " . $e->getMessage();
+    $error = "Failed to load orders. Please try again later.";
 }
 ?>
 <!DOCTYPE html>
