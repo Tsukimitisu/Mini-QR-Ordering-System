@@ -34,7 +34,15 @@ try {
     $paidOrders = intval($stats['paid_count'] ?? 0);
     $totalSales = floatval($stats['total_sales'] ?? 0.00);
     
-    error_log("Dashboard stats loaded: Total=$totalOrders, Pending=$pendingOrders, Paid=$paidOrders");
+    $logMessage = sprintf(
+        "Dashboard stats loaded at %s: Total=%d, Pending=%d, Paid=%d, Sales=%.2f",
+        date('Y-m-d H:i:s'),
+        $totalOrders,
+        $pendingOrders,
+        $paidOrders,
+        $totalSales
+    );
+    error_log($logMessage);
 } catch (\PDOException $e) {
     error_log("Dashboard stats error: " . $e->getMessage());
     $totalOrders = $pendingOrders = $paidOrders = 0;
