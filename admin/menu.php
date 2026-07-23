@@ -168,14 +168,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $availabilityStatus,
                 $stockQuantity,
             ]);
+            
+            $productId = $pdo->lastInsertId();
+            error_log("Product created: ID=$productId, Name=$productName, Category=$category, Price=$price, Stock=$stockQuantity, Image=$imageName");
 
             header('Location: menu.php?added=1');
             exit;
         } catch (Exception $e) {
+            error_log("Product creation failed: " . $e->getMessage());
             if ($imageName !== '' && $uploadDir !== false) {
                 $uploadedPath = $uploadDir . DIRECTORY_SEPARATOR . $imageName;
                 if (is_file($uploadedPath)) {
                     unlink($uploadedPath);
+                    error_log("Uploaded image cleaned up: $imageName");
                 }
             }
             $errors[] = 'Failed to save menu item: ' . $e->getMessage();
