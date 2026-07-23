@@ -157,6 +157,8 @@ if ($method === 'GET') {
         $orderStmt->execute([$customerName, $tableNumber, $totalAmount]);
         $orderId = $pdo->lastInsertId();
         
+        error_log("Order created: Order ID $orderId - Customer: $customerNameRaw, Table: $tableNumber, Total: $totalAmount, Items: " . count($orderItemsToInsert));
+        
         // 4. Save items linking to order_id
         $itemInsertStmt = $pdo->prepare("
             INSERT INTO order_items (order_id, product_id, product_name, quantity, price, subtotal) 
@@ -187,6 +189,8 @@ if ($method === 'GET') {
         
         // Commit transaction
         $pdo->commit();
+        
+        error_log("Order finalized: Order ID $orderId with " . count($orderItemsToInsert) . " items committed successfully");
         
         sendJsonResponse([
             'success' => true,
