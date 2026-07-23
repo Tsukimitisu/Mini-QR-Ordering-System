@@ -1,11 +1,16 @@
 <?php
 // api/helpers.php
 
+/**
+ * Send CORS headers for API requests
+ * @param string $allowedMethods Comma-separated list of allowed HTTP methods
+ */
 function sendCorsHeaders(string $allowedMethods): void
 {
     header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Headers: Content-Type');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
     header('Access-Control-Allow-Methods: ' . $allowedMethods);
+    header('Access-Control-Max-Age: 3600');
 }
 
 function sendNoStoreHeaders(): void
