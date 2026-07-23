@@ -21,6 +21,7 @@ if ($method === 'GET') {
         $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : '';
 
         if ($statusFilter !== '' && $statusFilter !== 'all' && !in_array($statusFilter, allowedOrderStatuses(), true)) {
+            error_log("Orders fetch failed: Invalid status filter ($statusFilter)");
             sendJsonResponse([
                 'success' => false,
                 'message' => 'Invalid order status filter.'
@@ -40,6 +41,8 @@ if ($method === 'GET') {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $orders = $stmt->fetchAll();
+        
+        error_log("Orders fetched: " . count($orders) . " orders" . ($statusFilter ? " with status '$statusFilter'" : ""));
         
         // Hydrate each order with its item lines
         foreach ($orders as &$order) {
