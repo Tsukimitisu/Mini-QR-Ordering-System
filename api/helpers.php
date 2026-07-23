@@ -153,4 +153,36 @@ function validateTableNumber(int $tableNumber): bool
     }
     return true;
 }
+
+/**
+ * Build a standardized success response with metadata
+ * @param array $data The response data
+ * @param string $message Optional success message
+ * @return array The formatted response
+ */
+function buildSuccessResponse(array $data = [], string $message = 'Operation successful'): array
+{
+    return [
+        'success' => true,
+        'message' => $message,
+        'timestamp' => date('Y-m-d H:i:s'),
+        'data' => $data
+    ];
+}
+
+/**
+ * Build a standardized error response with metadata
+ * @param string $message The error message
+ * @param string $code Optional error code
+ * @return array The formatted response
+ */
+function buildErrorResponse(string $message, string $code = 'ERROR'): array
+{
+    return [
+        'success' => false,
+        'message' => $message,
+        'code' => $code,
+        'timestamp' => date('Y-m-d H:i:s')
+    ];
+}
 ?>
