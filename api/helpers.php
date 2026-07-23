@@ -104,14 +104,53 @@ function maxOrderItemQuantity(): int
 }
 
 /**
- * Sanitize user input by trimming and removing null bytes
- * @param string $input The input string to sanitize
- * @return string The sanitized string
+ * Validate order item quantity
+ * @param int $quantity The quantity to validate
+ * @return bool True if valid
+ * @throws Exception if validation fails
  */
-function sanitizeInput(string $input): string
+function validateOrderItemQuantity(int $quantity): bool
 {
-    $sanitized = trim($input);
-    $sanitized = str_replace("\x00", '', $sanitized);
-    return $sanitized;
+    if ($quantity <= 0) {
+        throw new Exception("Quantity must be greater than 0.");
+    }
+    if ($quantity > maxOrderItemQuantity()) {
+        throw new Exception("Quantity cannot exceed " . maxOrderItemQuantity() . " per item.");
+    }
+    return true;
+}
+
+/**
+ * Validate customer name
+ * @param string $name The customer name to validate
+ * @return bool True if valid
+ * @throws Exception if validation fails
+ */
+function validateCustomerName(string $name): bool
+{
+    if (empty($name)) {
+        throw new Exception("Customer name is required.");
+    }
+    if (strlen($name) > maxCustomerNameLength()) {
+        throw new Exception("Customer name must be " . maxCustomerNameLength() . " characters or fewer.");
+    }
+    return true;
+}
+
+/**
+ * Validate table number
+ * @param int $tableNumber The table number to validate
+ * @return bool True if valid
+ * @throws Exception if validation fails
+ */
+function validateTableNumber(int $tableNumber): bool
+{
+    if ($tableNumber <= 0) {
+        throw new Exception("Table number must be greater than 0.");
+    }
+    if ($tableNumber > maxTableNumber()) {
+        throw new Exception("Table number must be " . maxTableNumber() . " or lower.");
+    }
+    return true;
 }
 ?>
