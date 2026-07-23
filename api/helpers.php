@@ -1,6 +1,12 @@
 <?php
 // api/helpers.php
 
+// Configuration Constants
+const API_RESPONSE_TIMEOUT = 30; // seconds
+const MAX_JSON_BODY_SIZE = 1048576; // 1MB
+const CACHE_EXPIRY_SECONDS = 3600; // 1 hour
+const REQUEST_RATE_LIMIT = 100; // requests per minute
+
 /**
  * Send CORS headers for API requests
  * @param string $allowedMethods Comma-separated list of allowed HTTP methods
