@@ -24,14 +24,17 @@ $data = isset($_GET['data']) ? trim($_GET['data']) : '';
 $size = isset($_GET['size']) ? intval($_GET['size']) : 220;
 
 if ($data === '') {
+    error_log('QR generation: missing data parameter');
     renderQrError('Missing QR data');
 }
 
 if (strlen($data) > 250) {
+    error_log('QR generation: data exceeds max length of 250');
     renderQrError('QR data too long');
 }
 
 if (preg_match('/[\x00-\x1F\x7F]/', $data)) {
+    error_log('QR generation: invalid characters detected in data');
     renderQrError('QR data contains unsupported characters');
 }
 
