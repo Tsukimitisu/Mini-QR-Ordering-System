@@ -203,13 +203,18 @@ if ($method === 'GET') {
         // Rollback on failure to prevent orphaned rows
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
+            error_log("Order transaction rolled back due to error: " . $e->getMessage());
         }
+        
+        error_log("Order submission failed: " . $e->getMessage());
+        
         sendJsonResponse([
             'success' => false,
             'message' => $e->getMessage()
         ], 400);
     }
 } else {
+    error_log("Invalid HTTP method attempted on orders endpoint: " . $_SERVER['REQUEST_METHOD']);
     sendJsonResponse([
         'success' => false,
         'message' => 'Method not allowed.'
